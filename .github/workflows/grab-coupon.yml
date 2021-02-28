@@ -24,7 +24,7 @@ jobs:
           node-version: '14'
       - run: yarn install
       - name: Run app
-      - run: yarn start
+        run: yarn start
         env:
           TOKEN: ${{ secrets.TOKEN }}
           BARK_KEY: ${{ secrets.BARK_KEY }}
