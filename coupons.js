@@ -12,11 +12,11 @@ let $request
 
 function genRequest(token) {
   const host = 'https://activityunion-marketing.meituan.com'
-  const cookie = `token=${token}`
+  const cookie = token.startsWith('token=') ? token : `token=${token}`
   let result
 
   return async (api, data = {}) => {
-    const url = api.indexOf('http') == 0 ? api : host + api
+    const url = api.startsWith('http') ? api : host + api
 
     try {
       result = await fetch(url, {
@@ -99,34 +99,32 @@ async function getCoupons(token) {
       msg: '成功'
     }
   } catch (e) {
+    const data = {
+      actUrl: actUrl
+    }
+    let code, msg
+
     console.log('getCoupons error', e)
 
     switch (e.code) {
       case ECODE.AURH:
-        return {
-          code: ECODE.AURH,
-          data: {
-            actUrl: actUrl
-          },
-          msg: '登录过期'
-        }
+        code = ECODE.AURH
+        msg = '登录过期'
+        break
       case ECODE.API:
-        return {
-          code: ECODE.API,
-          msg: '接口异常'
-        }
+        code = ECODE.API
+        msg = '接口异常'
+        break
       case ECODE.NETWOEK:
-        return {
-          code: ECODE.NETWOEK,
-          msg: '网络异常'
-        }
+        code = ECODE.NETWOEK
+        msg = '网络异常'
+        break
       default:
-        return {
-          code: ECODE.RUNTIME,
-          data: e,
-          msg: '程序异常'
-        }
+        code = ECODE.RUNTIME
+        msg = '程序异常'
     }
+
+    return { code, data, msg }
   }
 }
 
