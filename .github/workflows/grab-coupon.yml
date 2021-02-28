@@ -22,8 +22,8 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '14'
+      - run: yarn install
       - name: Run app
-        run: yarn install
       - run: yarn start
         env:
           TOKEN: ${{ secrets.TOKEN }}

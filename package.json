@@ -2,17 +2,26 @@
   "name": "actions-mtwm-coupons",
   "version": "1.0.0",
   "private": true,
-  "description": "美团外卖神券天天领",
+  "keywords": [],
+  "description": "外卖神券天天领",
+  "author": "Vincent <vv314@foxmail.com>",
   "main": "index.js",
   "scripts": {
     "test": "LOCAL_TEST=true node index",
     "start": "node index"
   },
-  "keywords": [],
-  "author": "Vincent <vv314@foxmail.com>",
-  "license": "MIT",
   "dependencies": {
-    "dotenv": "^8.2.0",
-    "node-fetch": "^2.6.1"
-  }
+    "node-fetch": "^2.6.1",
+    "dotenv": "^8.2.0"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vv314/actions-mtwm-coupons.git"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vv314/actions-mtwm-coupons/issues"
+  },
+  "homepage": "https://github.com/vv314/actions-mtwm-coupons#readme"
 }
