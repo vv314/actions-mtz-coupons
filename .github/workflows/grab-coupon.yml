@@ -1,14 +1,13 @@
 name: 领取美团外卖红包
 
-# doc https://docs.github.com/en/actions/reference/events-that-trigger-workflows
-
+# https://docs.github.com/cn/actions/reference/events-that-trigger-workflows#workflow_dispatch
 on:
   push:
     branches:
       - main
-  # 每天 11:30
+  workflow_dispatch:
   schedule:
-    - cron: '05 11 * * *'
+    - cron: '32 13 * * *'
 
 jobs:
   start:
