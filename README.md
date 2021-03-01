@@ -35,12 +35,12 @@ token=Js3xxxxFyy_Aq-rOnxMte6vKPV4AAAAA6QwAADgqRBSfcmNqyuG8CQ7JDL7xxxxNGbfF7tPNV5
       2. 在 `Value` 输入框中填入对应值
    5. 点击 `Add secret` 保存配置
 
-#### 工作流触发时机
+#### 工作流触发方式
 
-- git push (main 分支)
-- 每日 `11:05` 定时执行
+- 手动触发，点击 `Actions - Run workflow`
+- 自动触发，每日 `11:05` 定时执行
 
-注意：每日 `11:00~12:30` 之间可领取 `满30-6`, `满15-2` 红包，推荐在此期间执行。
+注意：推荐在 `11:00~12:30` 执行脚本，可获得 `满30-6`, `满15-2` 红包。
 
 ### 推送设置
 

@@ -2,9 +2,7 @@ name: 领取美团外卖红包
 
 # https://docs.github.com/cn/actions/reference/events-that-trigger-workflows#workflow_dispatch
 on:
-  push:
-    branches:
-      - main
+  # 手动触发
   workflow_dispatch:
   schedule:
     # https://crontab.guru/
