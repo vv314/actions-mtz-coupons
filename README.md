@@ -1,16 +1,16 @@
 ![外卖神券天天领](https://p0.meituan.net/dptakeaway/11b0b51183806e09f55a530fc0dd0409328863.jpg)
 
-# 外卖神券天天领
+# 🧧【美团】外卖神券天天领
 
-> 超值红包享不停
+![workflow](https://img.shields.io/github/workflow/status/vv314/actions-mtwm-coupons/%E9%A2%86%E7%BA%A2%E5%8C%85?label=%E9%A2%86%E7%BA%A2%E5%8C%85&logo=github%20actions&style=flat)
 
-外卖神券天天领，以自动化的方式定时领取美团外卖优惠券。
+外卖神券天天领，超值红包享不停；以自动化的方式领取美团红包。
 
 ## 使用教程
 
 ### 获取活动 TOKEN
 
-打开[红包活动页](https://activityunion-marketing.meituan.com/mtzcoupon/index.html)，登录后使用 Chrome DevTools 或任意抓包工具获取 cookie 信息，提取 `token` 字段值。
+打开[美团外卖活动页](https://activityunion-marketing.meituan.com/mtzcoupon/index.html)，登录后使用 Chrome DevTools 或任意抓包工具获取 cookie 信息，提取 `token` 字段值。
 
 示例：
 
