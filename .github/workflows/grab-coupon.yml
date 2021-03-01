@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
   schedule:
     # https://crontab.guru/
-    - cron: '*/10 * * * *'
+    - cron: '5 11 * * *'
 
 jobs:
   start:
