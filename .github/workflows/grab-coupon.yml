@@ -7,7 +7,7 @@ on:
       - main
   workflow_dispatch:
   schedule:
-    - cron: '32 13 * * *'
+    - cron: '45 13 * * *'
 
 jobs:
   start:
@@ -17,6 +17,7 @@ jobs:
     steps:
       - name: Checkout codes
         uses: actions/checkout@v2
+        with: { ref: main }
       - name: Use Node.js
         uses: actions/setup-node@v2
         with:
