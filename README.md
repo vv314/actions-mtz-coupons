@@ -37,10 +37,14 @@ token=Js3xxxxFyy_Aq-rOnxMte6vKPV4AAAAA6QwAADgqRBSfcmNqyuG8CQ7JDL7xxxxNGbfF7tPNV5
 
 #### 工作流触发方式
 
-- 手动触发，点击 `Actions - Run workflow`
-- 自动触发，每日 `11:05` 定时执行
+工作流内置**手动触发**，**自动触发**两种执行方式
 
-注意：推荐在 `11:00~12:30` 执行脚本，可获得 `满30-6`, `满15-2` 红包。
+- 自动触发，每日 `11:05` 定时执行（已开启）
+- 手动触发
+  - [在 GitHub 上运行工作流程](https://docs.github.com/cn/actions/managing-workflow-runs/manually-running-a-workflow#)
+  - [使用 REST API 运行工作流程](https://docs.github.com/cn/rest/reference/actions#create-a-workflow-dispatch-event)
+
+注：在每日 `11:00~12:30` 或 `17:00~19:00` 期间执行脚本，可获得 `满30-6`, `满15-2` 红包。
 
 ### 推送设置
 
