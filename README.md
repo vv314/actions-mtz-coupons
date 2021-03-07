@@ -23,12 +23,12 @@ token=Js3xxxxFyy_Aq-rOnxMte6vKPV4AAAAA6QwAADgqRBSfcmNqyuG8CQ7JDL7xxxxNGbfF7tPNV5
 使用 [GitHub Actions](https://docs.github.com/cn/actions) 部署：
 
 1. Fork 源项目
-   1. 访问 [actions-mtwm-coupons](https://github.com/vv314/actions-mtwm-coupons) 源仓库
+   1. 访问 [actions-mtz-coupons](https://github.com/vv314/actions-mtz-coupons) 源仓库
    2. 点击右上角 `Star` 按钮 ;)
    3. 点击右上角 `Fork` 按钮
 2. 添加 Actions secrets
-   1. 导航到你的仓库的主页面
-   2. 在仓库名称下，点击 `⚙️Settings`（设置）
+   1. 导航到你的仓库主页面
+   2. 在仓库名称下的菜单栏，点击 `⚙️Settings`（设置）
    3. 在左侧边栏中，点击 `Secrets`（密码）
    4. 点击 `New repository secret` 创建仓库密码
       1. 在 `Name` 输入框中填入 `TOKEN`
@@ -44,7 +44,7 @@ token=Js3xxxxFyy_Aq-rOnxMte6vKPV4AAAAA6QwAADgqRBSfcmNqyuG8CQ7JDL7xxxxNGbfF7tPNV5
   - [在 GitHub 上运行工作流程](https://docs.github.com/cn/actions/managing-workflow-runs/manually-running-a-workflow#)
   - [使用 REST API 运行工作流程](https://docs.github.com/cn/rest/reference/actions#create-a-workflow-dispatch-event)
 
-注：在每日 `11:00~12:30` 或 `17:00~19:00` 期间执行脚本，可获得 `满30-6`, `满15-2` 红包。
+注：在每日 `11:00~12:30` 或 `17:00~19:00` 期间执行脚本，有几率获得 `满30-6`, `满15-2` 红包。
 
 ### 推送设置
 
