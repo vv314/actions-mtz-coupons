@@ -35,4 +35,5 @@ jobs:
         env:
           TOKEN: ${{ secrets.TOKEN }}
           BARK_KEY: ${{ secrets.BARK_KEY }}
-          SEND_KEY: ${{ secrets.SEND_KEY }}
+          TG_USER_ID: ${{ secrets.TG_USER_ID }}
+          TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
