@@ -12,7 +12,7 @@ function barkPush(title, content, link) {
     param += `?url=${encodeURIComponent(link)}`
   }
 
-  return fetch(api + param, { timeout: 10000 })
+  return fetch(api + param, { timeout: 10000 }).then(res => res.json())
 }
 
 function telegramPush(title, content) {
@@ -20,16 +20,20 @@ function telegramPush(title, content) {
   const api = `https://api.telegram.org/bot${TG_BOT_TOKEN}/sendMessage`
   const search = `?chat_id=${TG_USER_ID}&text=${encodeURIComponent(msg)}`
 
-  return fetch(api + search, { timeout: 10000 })
+  return fetch(api + search, { timeout: 10000 }).then(res => res.json())
 }
 
 async function notify(title, content, link) {
   if (BARK_KEY) {
     barkPush(title, content, link)
+      .then(res => console.log('[notify] bark 推送成功', res))
+      .catch(e => console.log('[notify] bark 推送失败', e))
   }
 
   if (TG_USER_ID && TG_BOT_TOKEN) {
     telegramPush(title, content)
+      .then(res => console.log('[notify] telegram 推送成功', res))
+      .catch(e => console.log('[notify] telegram 推送失败', e))
   }
 }
 
