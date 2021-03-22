@@ -26,13 +26,13 @@ function telegramPush(title, content) {
 async function notify(title, content, link) {
   if (BARK_KEY) {
     barkPush(title, content, link)
-      .then(res => console.log('[notify] bark 推送成功', res))
+      .then(res => console.log('[notify] bark 推送成功'))
       .catch(e => console.log('[notify] bark 推送失败', e))
   }
 
   if (TG_USER_ID && TG_BOT_TOKEN) {
     telegramPush(title, content)
-      .then(res => console.log('[notify] telegram 推送成功', res))
+      .then(res => console.log('[notify] telegram 推送成功'))
       .catch(e => console.log('[notify] telegram 推送失败', e))
   }
 }
