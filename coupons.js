@@ -24,7 +24,8 @@ function genRequest(token) {
         data: data,
         headers: {
           cookie: cookie
-        }
+        },
+        timeout: 10000
       })
     } catch (e) {
       throw { code: ECODE.NETWOEK }
@@ -35,7 +36,7 @@ function genRequest(token) {
 }
 
 async function getRule() {
-  return $request('/mtz/index').then((res) => res.data.rule)
+  return $request('/mtz/index').then(res => res.data.rule)
 }
 
 async function grabCoupon() {
@@ -57,7 +58,7 @@ async function queryGrabResult() {
 }
 
 function formatCoupons(coupons) {
-  return coupons.map((item) => ({
+  return coupons.map(item => ({
     name: item.couponName,
     etime: item.etime,
     amount: item.couponAmount,

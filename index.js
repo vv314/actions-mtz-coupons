@@ -19,7 +19,7 @@ function printResult(data) {
   })
 
   console.log('\n—————— 领取结果 ——————\n')
-  const coupons = data.coupons.map((item) => {
+  const coupons = data.coupons.map(item => {
     console.log(item)
 
     return `- ￥${item.amount}（${item.amountLimit}）`

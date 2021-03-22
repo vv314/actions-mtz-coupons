@@ -52,8 +52,9 @@ token=Js3xxxxFyy_Aq-rOnxMte6vKPV4AAAAA6QwAADgqRBSfcmNqyuG8CQ7JDL7xxxxNGbfF7tPNV5
 
 #### Bark (仅 iOS 支持)
 
-手机 App Store 下载 [Bark App](https://apps.apple.com/cn/app/id1403753865)
-Bark 将为每个设备将被分配一个唯一的推送 URL
+App Store 需安装 [Bark](https://apps.apple.com/cn/app/id1403753865)
+
+打开 Bark 查看推送 URL：
 
 ```
 URL 组成：host/:key/:body
@@ -66,7 +67,33 @@ body: 推送内容
 ##### 配置 Bark key
 
 1. 提取推送 `key`（本例为 `kkWwxxxq5NpWx`）
-2. 进入项目 `Settings - Secrets` 配置页，点击 `New repository secret`，添加 `BARK_KEY` 项
+2. 进入项目 `Settings - Secrets` 配置页，点击 `New repository secret`，新建 `BARK_KEY` 项
+
+#### Telegram
+
+手机或电脑需安装 [Telegram](https://telegram.org/) 官方应用。
+
+##### 配置 Telegram Bot
+
+_如未获得 Telegram Bot，请参照下节 **申请 Telegram Bot**_
+
+进入项目 `Settings - Secrets` 配置页，点击 `New repository secret`
+
+- 新建 `TG_BOT_TOKEN` 项，填入你的 bot token
+- 新建 `TG_USER_ID` 项，填入你的用户 ID
+
+##### 申请 Telegram Bot
+
+1. tg 内搜索或打开 [@BotFather](https://t.me/botfather)
+2. 点击 `/start` 启动 bot 生成器
+3. 点击 `/newbot` 创建新 bot，按提示输入 bot 昵称
+4. 按提示输入 bot id，id 需全局唯一，以 `_bot` 结尾，例：`test_bot`
+5. 创建成功后，将会返回你的 bot token，例：`1689581149:AAGYVVjEHsaNxxxT8eQxxxshwr2o4Pxxxu86`，需妥善保存
+6. tg 内搜索刚刚创建的 bot id（本例: `test_bot`），点击 `/start` 启动
+
+##### 获取用户 ID
+
+搜索 [@userinfobot](https://t.me/useridinfobot)，点击 `/start` 启动，bot 将返回你的用户 ID，具体表现为一串数字，例：`100000000`
 
 ### 调试
 
@@ -79,6 +106,10 @@ body: 推送内容
 TOKEN=token=Js3xxxxFyy_Aq-rOnxMte6vKPV4AAAAA6QwAADgqRBSfcmNqyuG8CQ7JDL7xxxxNGbfF7tPNV5347_ANLcydua_JHCSRj0_xxxg9xx;
 # bark 推送 key
 BARK_KEY=kkWwxxxq5NpWx
+# telegram bot token
+TG_BOT_TOKEN=1689581149:AAGYVVjEHsaNxxxT8eQxxxshwr2o4Pxxxu86
+# telegram 用户 ID
+TG_USER_ID=100000000
 ```
 
 运行调试命令：
