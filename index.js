@@ -13,6 +13,7 @@ const MAX_RETRY_COUNT = 2
 const notifier = new Notifier({
   barkToken: process.env.BARK_KEY,
   serverChanToken: process.env.SC_SEND_KEY,
+  workWechat: process.env.QYWX_SEND_CONF,
   telegram: {
     botToken: process.env.TG_BOT_TOKEN,
     userId: process.env.TG_USER_ID

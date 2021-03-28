@@ -2,6 +2,7 @@ const Notifier = require('../lib/Notifier')
 
 const notifier = new Notifier({
   barkToken: process.env.BARK_KEY,
+  workWechat: process.env.QYWX_SEND_CONF,
   serverChanToken: process.env.SC_SEND_KEY
   // telegram: {
   //   botToken: process.env.TG_BOT_TOKEN,

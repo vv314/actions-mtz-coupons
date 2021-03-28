@@ -98,6 +98,44 @@ _已拥有 Telegram Bot？直接参考下节 **【推送配置】**_
    - 新建 `TG_BOT_TOKEN` 项，填入 bot token
    - 新建 `TG_USER_ID` 项，填入用户 ID
 
+#### 企业微信
+
+[企业微信](https://work.weixin.qq.com) 是微信团队出品的企业通讯与办公应用，具有与微信互联的能力。
+
+##### 创建企业微信应用
+
+_已拥有企业微信应用？直接参考下节 **【推送配置】**_
+
+1. PC 端打开[企业微信官网](https://work.weixin.qq.com/)，注册一个企业
+2. 注册完成后，进入“[应用管理](https://work.weixin.qq.com/wework_admin/frame#apps)” → “应用” → “自建”，点击 `➕创建应用`
+3. 完善应用名称与 logo 信息，可见范围选择公司名
+
+##### 推送配置
+
+1. 在管理后台 “[我的企业](https://work.weixin.qq.com/wework_admin/frame#profile)” → “企业信息” 下获取 “企业 ID”
+2. 在管理后台 “[应用管理](https://work.weixin.qq.com/wework_admin/frame#apps)” → “应用” → “自建”，点进目标应用，获取 `AgentId`（应用 ID）
+3. 在管理后台 “[应用管理](https://work.weixin.qq.com/wework_admin/frame#apps)” → “应用” → “自建”，点进目标应用，获取 `Secret`（应用钥匙）
+4. 进入项目 "Settings" → "Secrets" 配置页，点击 `New repository secret`
+   - 新建 `QYWX_SEND_CONF` 项，填入 **\<JSON 配置>**
+
+**JSON 配置**字段说明:
+
+- `corpId` `{String}` 企业 ID
+- `agentId` `{String}` 应用 ID
+- `corpSecret` `{String}` 应用钥匙
+- `toUser` `{String}` 用户 ID，多用户以 | 分割，默认: `@all`（推送所有）
+
+示例：
+
+```json
+{
+  "corpId": "wwxxxe9ddxxxc50xxx",
+  "agentId": "1000002",
+  "corpSecret": "12Qxxxo4hxxxyedtxxxdyfVxxxCqh6xxxF0zg3xxxNI",
+  "toUser": "@all"
+}
+```
+
 #### Server 酱
 
 [Server 酱](https://sct.ftqq.com) 是一款从服务器、路由器等设备上推消息到手机的工具。
@@ -123,6 +161,8 @@ TG_BOT_TOKEN=1689581149:AAGYVVjEHsaNxxxT8eQxxxshwr2o4Pxxxu86
 TG_USER_ID=100000000
 # server 酱 SendKey
 SC_SEND_KEY=SCTxxxxxTPIvAYxxxxxXjGGzvCfUxxxxxx
+# 企业微信配置
+QYWX_SEND_CONF={"agentId": "1000002", "corpId": "wwxxxe9ddxxxc50xxx", "corpSecret": "12Qxxxo4hxxxyedtxxxdyfVxxxCqh6xxxF0zg3xxxNI", "toUser": "@all"}
 ```
 
 运行调试命令：
