@@ -4,13 +4,22 @@ if (process.env.LOCAL_TEST) {
   require('dotenv').config()
 }
 
-const getCoupons = require('./coupons')
-const notify = require('./notify').bind(null, '外卖神券天天领😋')
-
-const MAX_RETRY_COUNT = 2
-let retryCount = 0
+const Notifier = require('./lib/Notifier')
+const getCoupons = require('./lib/coupons')
 
 const TOKEN = process.env.TOKEN
+const MAX_RETRY_COUNT = 2
+
+const notifier = new Notifier({
+  barkToken: process.env.BARK_KEY,
+  serverChanToken: process.env.SC_SEND_KEY,
+  telegram: {
+    botToken: process.env.TG_BOT_TOKEN,
+    userId: process.env.TG_USER_ID
+  }
+})
+const notify = notifier.notify.bind(notifier, '外卖神券天天领😋')
+let retryCount = 0
 
 function printResult(data) {
   console.log('—————— 活动规则 ——————\n')
@@ -30,15 +39,20 @@ function printResult(data) {
   return coupons.join('\n')
 }
 
+function grabSuccess(data) {
+  const link = 'https://h5.waimai.meituan.com/waimai/mindex/home'
+  const text = printResult(data)
+
+  console.log('\n🎉 执行成功！\n')
+
+  notify(text, link).then(res => res.forEach(e => console.log(e)))
+}
+
 async function main() {
   const result = await getCoupons(TOKEN)
 
   if (result.code == 0) {
-    const text = printResult(result.data)
-
-    notify(text, 'https://h5.waimai.meituan.com/waimai/mindex/home')
-
-    return console.log('\n执行成功✅')
+    return grabSuccess(result.data)
   }
 
   if (result.code == 1) {

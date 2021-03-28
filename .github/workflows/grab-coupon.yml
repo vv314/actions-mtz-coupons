@@ -37,3 +37,4 @@ jobs:
           BARK_KEY: ${{ secrets.BARK_KEY }}
           TG_USER_ID: ${{ secrets.TG_USER_ID }}
           TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
+          SC_SEND_KEY: ${{ secrets.SC_SEND_KEY }}
