@@ -7,7 +7,8 @@
   "author": "Vincent <vv314@foxmail.com>",
   "main": "index.js",
   "scripts": {
-    "test": "LOCAL_TEST=true node index",
+    "test": "node test/index",
+    "dev": "LOCAL_TEST=true node index",
     "start": "node index"
   },
   "dependencies": {
