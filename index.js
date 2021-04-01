@@ -107,7 +107,8 @@ function sendTaskNotify(msg, account) {
     result.push(tgRes)
   }
 
-  return Promise.all(result).then(arr => arr.map(res => `[用户通知] ${res}`))
+  // return Promise.all(result).then(arr => arr.map(res => `[用户通知] ${res}`))
+  return result.map(p => p.then(r => `[用户通知] ${r}`))
 }
 
 async function runTask(account) {
@@ -122,7 +123,7 @@ async function runTask(account) {
     const text = stringifyCoupons(data.coupons)
     const pushRes = sendTaskNotify(text, account)
 
-    notifyResult.push(pushRes)
+    notifyResult = notifyResult.concat(pushRes)
 
     return { account: data.phone, text }
   }
@@ -155,15 +156,18 @@ async function main() {
   // just new line
   console.log()
 
-  const text = stringifyTasks(tasks)
-  const pushRes = notify(text).then(arr =>
-    arr.map(res => `[全局通知] ${res.msg}`)
+  const taskMsg = stringifyTasks(tasks)
+  const pushRes = notify(taskMsg).map(p =>
+    p.then(res => `[全局通知] ${res.msg}`)
   )
 
-  notifyResult.push(pushRes)
+  notifyResult = notifyResult.concat(pushRes)
 
-  for await (let res of notifyResult) {
-    res.forEach(e => console.log(e))
+  if (notifyResult.length) {
+    console.log(`\n—————————— 推送通知 ——————————\n`)
+
+    // 异步打印结果
+    notifyResult.forEach(p => p.then(res => console.log(res)))
   }
 }
 
