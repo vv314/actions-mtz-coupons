@@ -1,2 +1,5 @@
 require('dotenv').config()
-require('./notify')
+
+// require('./notify')
+require('./parseToken')
+// require('./coupons')
