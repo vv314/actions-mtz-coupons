@@ -157,10 +157,6 @@ async function main() {
 
   const tokens = parseToken(TOKEN)
   const tasks = await runTaskList(tokens)
-
-  // just new line
-  console.log()
-
   const pushRes = sendNotify(tasks)
 
   await printNotifyResult(pushRes)
