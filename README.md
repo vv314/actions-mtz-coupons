@@ -8,7 +8,7 @@
 
 ## 📕 使用教程
 
-#### 获取登录 TOKEN
+#### 获取账户 TOKEN
 
 打开[美团主页](http://i.meituan.com/)，登录后使用 Chrome DevTools 或任意抓包工具获取 cookie 信息，提取 `token` 字段值。
 
@@ -43,12 +43,13 @@ _Fork 后的项目可执行 `npm run sync` 同步上游更新，详细参考【�
 当配置 `String` 类型时，值为 cookie 中提取的 token 信息；
 当配置 `JSON` 对象类型时，应包含以下属性：
 
-| 属性名  | 类型   | 默认值 | 必填 | 说明                   |
-| ------- | ------ | ------ | ---- | ---------------------- |
-| token   | string |        | 是   | 登录 token             |
-| qywxUid | string |        | 否   | 企业微信通知，用户 id  |
-| tgUid   | string |        | 否   | Telegram 通知，用户 id |
-| barkKey | string |        | 否   | Bark 通知，推送 Key    |
+| 属性名  | 类型   | 默认值 | 必填 | 说明                     |
+| ------- | ------ | ------ | ---- | ------------------------ |
+| token   | string |        | 是   | 账户 token               |
+| alias   | string |        | 否   | 配置别名，便于区分多账户 |
+| qywxUid | string |        | 否   | 企业微信通知，用户 id    |
+| tgUid   | string |        | 否   | Telegram 通知，用户 id   |
+| barkKey | string |        | 否   | Bark 通知，推送 Key      |
 
 _注意：企业微信通知需配置 `QYWX_SEND_CONF` Secret，Telegram 通知需配置 `TG_BOT_TOKEN` Secret，详见【消息通知】章节_
 
@@ -79,6 +80,7 @@ JSON 配置示例:
   "Js3xxxxFyy_Aq-rOnxMte6vKPV4AAAAA6QwAADgqRBSfcmNqyuG8CQ7JDL7xxxxNGbfF7tPNV5347_ANLcydua_JHCSRj0_xxxg9xx",
   {
     "token": "3R2xxxxxUqS_Aq-rOnxMte6vKPV4AAAAA6QwAADgqRBSfcmNqyuG8CQ7JDL7xxxxNGbfF7tPNV5347_ANLcydua_JHCSRj0_xxxg9xx",
+    "alias": "鱼言",
     "barkKey": "kkWwxxxq5NpWx",
     "qywxUid": "Vincent"
   }

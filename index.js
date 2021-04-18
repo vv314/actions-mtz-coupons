@@ -75,20 +75,21 @@ function sendUserNotify(msg, account) {
 }
 
 async function runTask(account) {
-  const result = await getCoupons(account.token)
-  const { code, data, msg } = result
+  const couponsInfo = await getCoupons(account.token)
+  const { code, data, msg } = couponsInfo
+  const user = account.alias || data.phone
 
   if (code == 0) {
     console.log(...data.coupons)
     console.log(`\n红包已放入账号：${data.phone}`)
     console.log(`\n🎉 领取成功！`)
 
-    const text = stringifyCoupons(data.coupons)
-    const pushRes = sendUserNotify(text, account)
+    const message = stringifyCoupons(data.coupons)
+    const pushRes = sendUserNotify(message, account)
 
     userNotifyResult = userNotifyResult.concat(pushRes)
 
-    return { account: data.phone, text }
+    return { user: user, data: message }
   }
 
   const errMsg = `领取失败: ${msg}`
@@ -115,17 +116,18 @@ async function runTaskList(tokenList) {
   const result = []
 
   for (let i = 0; i < total; i++) {
-    console.log(`\n—————————— 第 ${i + 1}/${total} 账户 ——————————\n`)
-    result.push(await runTask(tokenList[i]))
+    const account = tokenList[i]
+    const alias = account.alias ? `【${account.alias}】` : ''
+
+    console.log(`\n—————————— 第 ${i + 1}/${total} 账户${alias} ——————————\n`)
+    result.push(await runTask(account))
   }
 
   return result
 }
 
 function sendNotify(tasks) {
-  const message = tasks
-    .map(res => `账户 ${res.account}:\n${res.text}`)
-    .join('\n\n')
+  const message = tasks.map(t => `账户 ${t.user}:\n${t.data}`).join('\n\n')
 
   return notify(message).map(p => p.then(res => `[全局通知] ${res.msg}`))
 }
