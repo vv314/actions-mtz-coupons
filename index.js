@@ -5,6 +5,7 @@ if (process.env.LOCAL_TEST) {
 }
 
 const Notifier = require('./lib/Notifier')
+const updateNotifier = require('./lib/update-notifier')
 const { getCoupons, getRule } = require('./lib/coupons')
 
 const TOKEN = process.env.TOKEN
@@ -19,7 +20,7 @@ const notifier = new Notifier({
 })
 const notifyTitle = '外卖神券天天领😋'
 const notify = notifier.notify.bind(notifier, notifyTitle)
-let notifyResult = []
+let userNotifyResult = []
 
 function tokenFormat(token) {
   const defToken = {
@@ -74,11 +75,7 @@ function stringifyCoupons(coupons) {
     .join('\n')
 }
 
-function stringifyTasks(tasks) {
-  return tasks.map(res => `账户 ${res.account}:\n${res.text}`).join('\n\n')
-}
-
-function sendTaskNotify(msg, account) {
+function sendUserNotify(msg, account) {
   const result = []
 
   if (account.barkKey) {
@@ -121,9 +118,9 @@ async function runTask(account) {
     console.log(`\n🎉 领取成功！`)
 
     const text = stringifyCoupons(data.coupons)
-    const pushRes = sendTaskNotify(text, account)
+    const pushRes = sendUserNotify(text, account)
 
-    notifyResult = notifyResult.concat(pushRes)
+    userNotifyResult = userNotifyResult.concat(pushRes)
 
     return { account: data.phone, text }
   }
@@ -136,32 +133,39 @@ async function runTask(account) {
   return errMsg
 }
 
-async function main() {
-  const tokenList = parseToken(TOKEN)
+async function printRule() {
   const rule = await getRule()
 
-  console.log('—————————— 活动规则 ——————————\n')
-  rule.forEach((item, i) => {
-    console.log(`${i + 1}. ${item}`)
-  })
+  if (rule.length) {
+    console.log('—————————— 活动规则 ——————————\n')
+    rule.forEach((item, i) => {
+      console.log(`${i + 1}. ${item}`)
+    })
+  }
+}
 
+async function runTaskList(tokenList) {
   const total = tokenList.length
-  const tasks = []
+  const result = []
 
   for (let i = 0; i < total; i++) {
     console.log(`\n—————————— 第 ${i + 1}/${total} 账户 ——————————\n`)
-    tasks.push(await runTask(tokenList[i]))
+    result.push(await runTask(tokenList[i]))
   }
 
-  // just new line
-  console.log()
+  return result
+}
 
-  const taskMsg = stringifyTasks(tasks)
-  const pushRes = notify(taskMsg).map(p =>
-    p.then(res => `[全局通知] ${res.msg}`)
-  )
+function sendNotify(tasks) {
+  const message = tasks
+    .map(res => `账户 ${res.account}:\n${res.text}`)
+    .join('\n\n')
 
-  notifyResult = notifyResult.concat(pushRes)
+  return notify(message).map(p => p.then(res => `[全局通知] ${res.msg}`))
+}
+
+async function printNotifyResult(pushRes) {
+  const notifyResult = [].concat(userNotifyResult, pushRes)
 
   if (notifyResult.length) {
     console.log(`\n—————————— 推送通知 ——————————\n`)
@@ -169,6 +173,33 @@ async function main() {
     // 异步打印结果
     notifyResult.forEach(p => p.then(res => console.log(res)))
   }
+
+  return Promise.all(notifyResult)
+}
+
+async function checkUpdate() {
+  const message = await updateNotifier()
+
+  if (!message) return
+
+  console.log(`\n—————————— 更新提醒 ——————————\n`)
+  console.log(message)
+}
+
+async function main() {
+  await printRule()
+
+  const tokens = parseToken(TOKEN)
+  const tasks = await runTaskList(tokens)
+
+  // just new line
+  console.log()
+
+  const pushRes = sendNotify(tasks)
+
+  await printNotifyResult(pushRes)
+
+  checkUpdate()
 }
 
 main()

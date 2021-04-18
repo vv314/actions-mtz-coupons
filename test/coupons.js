@@ -1,11 +1,11 @@
-const { getRule } = require('../lib/coupons')
+const { getRule, getCoupons } = require('../lib/coupons')
+
+const TOKEN = process.env.TOKEN
 
 async function main() {
-  const rule = await getRule()
+  const res = await getCoupons(TOKEN)
 
-  rule.forEach((item, index) => {
-    console.log(`${++index}. ${item}`)
-  })
+  console.log(res)
 }
 
 main()
