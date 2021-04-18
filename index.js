@@ -44,11 +44,12 @@ function stringifyCoupons(coupons) {
 
 function sendUserNotify(msg, account) {
   const result = []
+  const user = account.alias
 
   if (account.barkKey) {
     const qywxRes = notifier
       .sendBark(notifyTitle, msg, { key: account.barkKey })
-      .then(res => `@${account.barkKey.slice(0, 5)} ${res.msg}`)
+      .then(res => `@${user} ${res.msg}`)
 
     result.push(qywxRes)
   }
@@ -58,7 +59,7 @@ function sendUserNotify(msg, account) {
       .sendWorkWechat(notifyTitle, msg, {
         uid: account.qywxUid
       })
-      .then(res => `@${account.qywxUid} ${res.msg}`)
+      .then(res => `@${user} ${res.msg}`)
 
     result.push(qywxRes)
   }
@@ -66,7 +67,7 @@ function sendUserNotify(msg, account) {
   if (account.tgUid) {
     const tgRes = notifier
       .sendTelegram(notifyTitle, msg, { uid: account.tgUid })
-      .then(res => `@${account.tgUid} ${res.msg}`)
+      .then(res => `@${user} ${res.msg}`)
 
     result.push(tgRes)
   }
@@ -77,7 +78,6 @@ function sendUserNotify(msg, account) {
 async function runTask(account) {
   const couponsInfo = await getCoupons(account.token)
   const { code, data, msg } = couponsInfo
-  const user = account.alias || data.phone
 
   if (code == 0) {
     console.log(...data.coupons)
@@ -89,7 +89,7 @@ async function runTask(account) {
 
     userNotifyResult = userNotifyResult.concat(pushRes)
 
-    return { user: user, data: message }
+    return { user: account.alias, data: message }
   }
 
   const errMsg = `领取失败: ${msg}`
@@ -117,9 +117,10 @@ async function runTaskList(tokenList) {
 
   for (let i = 0; i < total; i++) {
     const account = tokenList[i]
-    const alias = account.alias ? `【${account.alias}】` : ''
 
-    console.log(`\n—————————— 第 ${i + 1}/${total} 账户${alias} ——————————\n`)
+    console.log(
+      `\n—————————— [${i + 1}/${total}] 账号: ${account.alias} ——————————\n`
+    )
     result.push(await runTask(account))
   }
 
@@ -127,7 +128,7 @@ async function runTaskList(tokenList) {
 }
 
 function sendNotify(tasks) {
-  const message = tasks.map(t => `账户 ${t.user}:\n${t.data}`).join('\n\n')
+  const message = tasks.map(t => `账号 ${t.user}:\n${t.data}`).join('\n\n')
 
   return notify(message).map(p => p.then(res => `[全局通知] ${res.msg}`))
 }
