@@ -2,7 +2,7 @@
 
 # 🧧【美团】外卖神券天天领
 
-![workflow](https://img.shields.io/github/workflow/status/vv314/actions-mtz-coupons/%E9%A2%86%E7%BA%A2%E5%8C%85?label=%E9%A2%86%E7%BA%A2%E5%8C%85&logo=github%20actions&style=flat) ![license](https://img.shields.io/github/license/vv314/actions-mtz-coupons)
+![workflow](https://img.shields.io/github/workflow/status/vv314/actions-mtz-coupons/%E9%A2%86%E7%BA%A2%E5%8C%85?label=%E9%A2%86%E7%BA%A2%E5%8C%85&logo=github%20actions&style=flat) ![last-commit](https://img.shields.io/github/last-commit/vv314/actions-mtz-coupons) ![release](https://img.shields.io/github/v/release/vv314/actions-mtz-coupons)
 
 外卖神券天天领，超值红包享不停；以自动化的方式领取美团红包。
 
@@ -10,7 +10,7 @@
 
 #### 获取登录 TOKEN
 
-打开[美团外卖活动页](https://activityunion-marketing.meituan.com/mtzcoupon/index.html)，登录后使用 Chrome DevTools 或任意抓包工具获取 cookie 信息，提取 `token` 字段值。
+打开[美团主页](http://i.meituan.com/)，登录后使用 Chrome DevTools 或任意抓包工具获取 cookie 信息，提取 `token` 字段值。
 
 示例：
 
@@ -35,7 +35,9 @@ token=Js3xxxxFyy_Aq-rOnxMte6vKPV4AAAAA6QwAADgqRBSfcmNqyuG8CQ7JDL7xxxxNGbfF7tPNV5
       2. 在 `Value` 输入框中填入从 cookie 中提取的 token 值
    5. 点击 `Add secret` 保存配置
 
-#### TOKEN 格式
+_Fork 后的项目可执行 `npm run sync` 同步上游更新，详细参考【脚本更新】章节_
+
+### TOKEN 格式
 
 `TOKEN` Secret 支持 `String` 或 `JSON` 对象两种数据格式。
 当配置 `String` 类型时，值为 cookie 中提取的 token 信息；
@@ -216,6 +218,24 @@ _已拥有企业微信应用？直接参考下节 **【配置企业应用】**_
 1. 打开 Server 酱 [SendKey](https://sct.ftqq.com/sendkey) 页面，获取 `SendKey`
 2. 进入项目 "Settings" → "Secrets" 配置页，点击 `New repository secret`
    - 新建 `SC_SEND_KEY` 项，填入 `SendKey`
+
+## 🔄 脚本更新
+
+此项目将长期维护，为了确保副本能够及时享受到上游更新，请定期执行同步操作。
+
+### 使用命令同步（推荐）
+
+执行 npm script：
+
+```bash
+npm run sync
+```
+
+脚本执行后会拉取上游仓库的最新主分支代码，与本地主分支进行合并，最后合并结果同步到远程仓库。
+
+### 手动同步
+
+参考 Github 官方文档 [同步复刻](https://docs.github.com/cn/github/collaborating-with-issues-and-pull-requests/syncing-a-fork)
 
 ## 🛠 开发 & 测试
 

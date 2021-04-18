@@ -9,11 +9,12 @@
   "scripts": {
     "test": "node test/index",
     "dev": "LOCAL_TEST=true node index",
+    "sync": "node ./sync-upstream",
     "start": "node index"
   },
   "dependencies": {
-    "node-fetch": "^2.6.1",
-    "dotenv": "^8.2.0"
+    "dotenv": "^8.2.0",
+    "node-fetch": "^2.6.1"
   },
   "devDependencies": {},
   "repository": {
