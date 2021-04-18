@@ -5,6 +5,7 @@ if (process.env.LOCAL_TEST) {
 }
 
 const Notifier = require('./lib/Notifier')
+const parseToken = require('./lib/parse-token')
 const updateNotifier = require('./lib/update-notifier')
 const { getCoupons, getRule } = require('./lib/coupons')
 
@@ -21,40 +22,6 @@ const notifier = new Notifier({
 const notifyTitle = '外卖神券天天领😋'
 const notify = notifier.notify.bind(notifier, notifyTitle)
 let userNotifyResult = []
-
-function tokenFormat(token) {
-  const defToken = {
-    token: '',
-    name: '',
-    tgUid: '',
-    qywxUid: '',
-    barkKey: ''
-  }
-
-  if (typeof token == 'string') {
-    token = { token }
-  }
-
-  return Object.assign({}, defToken, token)
-}
-
-function parseToken(token) {
-  const likeArray = /^\[.*\]$/.test(token)
-  const likeObject = /^\{.*\}$/.test(token)
-  let tokenList = []
-
-  if (!likeArray && !likeObject) {
-    return [tokenFormat(token)]
-  }
-
-  try {
-    tokenList = tokenList.concat(JSON.parse(token))
-  } catch (e) {
-    throw new Error('JSON 格式有误' + e)
-  }
-
-  return tokenList.map(tokenFormat)
-}
 
 function printResult(data) {
   console.log('\n—————— 领取结果 ——————\n')
@@ -104,7 +71,6 @@ function sendUserNotify(msg, account) {
     result.push(tgRes)
   }
 
-  // return Promise.all(result).then(arr => arr.map(res => `[用户通知] ${res}`))
   return result.map(p => p.then(r => `[用户通知] ${r}`))
 }
 
