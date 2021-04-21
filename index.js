@@ -4,6 +4,10 @@ if (process.env.LOCAL_TEST) {
   require('dotenv').config()
 }
 
+process.on('unhandledRejection', err => {
+  throw err
+})
+
 const Notifier = require('./lib/Notifier')
 const { version } = require('./package.json')
 const parseToken = require('./lib/parse-token')
