@@ -5,6 +5,7 @@ if (process.env.LOCAL_TEST) {
 }
 
 const Notifier = require('./lib/Notifier')
+const { version } = require('./package.json')
 const parseToken = require('./lib/parse-token')
 const updateNotifier = require('./lib/update-notifier')
 const { getCoupons, getRule } = require('./lib/coupons')
@@ -23,18 +24,15 @@ const notifyTitle = '外卖神券天天领😋'
 const notify = notifier.notify.bind(notifier, notifyTitle)
 let userNotifyResult = []
 
-function printResult(data) {
-  console.log('\n—————— 领取结果 ——————\n')
-  const coupons = data.coupons.map(item => {
-    console.log(item)
+console.log(`
+───────────────────────────────────────
+ actions-mtwm-coupons
+ 外卖神券天天领
+───────────────────────
 
-    return `- ￥${item.amount}（${item.amountLimit}）`
-  })
+ Ver. ${version}
 
-  console.log(`\n红包已放入账号：${data.phone}`)
-
-  return coupons.join('\n')
-}
+ Github @vv314`)
 
 function stringifyCoupons(coupons) {
   return coupons
@@ -119,7 +117,7 @@ async function runTaskList(tokenList) {
     const account = tokenList[i]
 
     console.log(
-      `\n—————————— [${i + 1}/${total}] 账号: ${account.alias} ——————————\n`
+      `\n────────── [${i + 1}/${total}] 账号: ${account.alias} ──────────\n`
     )
     result.push(await runTask(account))
   }
@@ -137,7 +135,7 @@ async function printNotifyResult(pushRes) {
   const notifyResult = [].concat(userNotifyResult, pushRes)
 
   if (notifyResult.length) {
-    console.log(`\n—————————— 推送通知 ——————————\n`)
+    console.log(`\n────────── 推送通知 ──────────\n`)
 
     // 异步打印结果
     notifyResult.forEach(p => p.then(res => console.log(res)))
@@ -151,7 +149,7 @@ async function checkUpdate() {
 
   if (!message) return
 
-  console.log(`\n—————————— 更新提醒 ——————————\n`)
+  console.log(`\n────────── 更新提醒 ──────────\n`)
   console.log(message)
 }
 
