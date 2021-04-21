@@ -16,8 +16,7 @@
 
 #### :rocket: New Feature
 
-= 升级至 gundam API
-
+- 升级至 **gundam API**
 - 添加 Release 更新提醒
 - 添加 sync 同步副本命令
 
