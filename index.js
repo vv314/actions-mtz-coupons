@@ -8,6 +8,7 @@ process.on('unhandledRejection', err => {
   throw err
 })
 
+const pLimit = require('p-limit')
 const Notifier = require('./lib/Notifier')
 const { version } = require('./package.json')
 const parseToken = require('./lib/parse-token')
@@ -32,7 +33,7 @@ console.log(`
 ───────────────────────────────────────
  actions-mtwm-coupons
  外卖神券天天领
-───────────────────────
+────────────────────────
 
  Ver. ${version}
 
@@ -77,9 +78,13 @@ function sendUserNotify(msg, account) {
   return result.map(p => p.then(r => `[用户通知] ${r}`))
 }
 
-async function runTask(account) {
+async function doJob(account, progress) {
   const couponsInfo = await getCoupons(account.token)
   const { code, data, msg } = couponsInfo
+
+  console.log(
+    `\n────────── [${progress.mark()}] 账号: ${account.alias} ──────────\n`
+  )
 
   if (code == 0) {
     console.log(...data.coupons)
@@ -87,9 +92,9 @@ async function runTask(account) {
     console.log(`\n🎉 领取成功！`)
 
     const message = stringifyCoupons(data.coupons)
-    const pushRes = sendUserNotify(message, account)
+    const pushInfo = sendUserNotify(message, account)
 
-    userNotifyResult = userNotifyResult.concat(pushRes)
+    userNotifyResult = userNotifyResult.concat(pushInfo)
 
     return { user: account.alias, data: message }
   }
@@ -113,20 +118,18 @@ async function printRule() {
   }
 }
 
-async function runTaskList(tokenList) {
-  const total = tokenList.length
-  const result = []
-
-  for (let i = 0; i < total; i++) {
-    const account = tokenList[i]
-
-    console.log(
-      `\n────────── [${i + 1}/${total}] 账号: ${account.alias} ──────────\n`
-    )
-    result.push(await runTask(account))
+async function runTask(tokenList) {
+  const asyncPool = pLimit(5)
+  const progress = {
+    count: 0,
+    mark() {
+      return `${++this.count}/${tokenList.length}`
+    }
   }
 
-  return result
+  return Promise.all(
+    tokenList.map(account => asyncPool(doJob, account, progress))
+  )
 }
 
 function sendNotify(tasks) {
@@ -149,7 +152,13 @@ async function printNotifyResult(pushRes) {
 }
 
 async function checkUpdate() {
-  const message = await updateNotifier()
+  let message
+
+  try {
+    message = await updateNotifier()
+  } catch (e) {
+    console.log('\n', e)
+  }
 
   if (!message) return
 
@@ -161,7 +170,7 @@ async function main() {
   await printRule()
 
   const tokens = parseToken(TOKEN)
-  const tasks = await runTaskList(tokens)
+  const tasks = await runTask(tokens)
   const pushRes = sendNotify(tasks)
 
   await printNotifyResult(pushRes)
