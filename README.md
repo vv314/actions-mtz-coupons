@@ -6,7 +6,7 @@
 
 外卖神券天天领，超值红包享不停；以自动化的方式领取美团红包。
 
->★ 多帐号支持，全村都能配上<br/>★ 并行化任务，数管齐下更有效率<br/>★ 多路消息通知，总有一个到达你<br/>★ Github Actions 部署，从未如此简单<br/>★ 升级提醒，新特性一手掌握
+> ★ 多帐号支持，全村都能配上<br/>★ 并行化任务，数管齐下更有效率<br/>★ 多路消息通知，总有一个到达你<br/>★ Github Actions 部署，从未如此简单<br/>★ 升级提醒，新特性一手掌握
 
 ## 📕 使用教程
 
@@ -26,8 +26,8 @@ token=Js3xxxxFyy_Aq-rOnxMte6vKPV4AAAAA6QwAADgqRBSfcmNqyuG8CQ7JDL7xxxxNGbfF7tPNV5
 
 1. Fork 源项目
    1. 访问 [actions-mtz-coupons](https://github.com/vv314/actions-mtz-coupons) 源仓库
-   2. 点击右上角 `Fork` 按钮
-   3. 点击右上角 `Star` 按钮 ;)
+   2. 点击右上角 `Star` 按钮 ;)
+   3. 点击右上角 `Fork` 按钮
 2. 添加 Actions secrets
    1. 导航到 Fork 后的仓库主页面
    2. 在仓库菜单栏中，点击 `⚙️Settings`（设置）
