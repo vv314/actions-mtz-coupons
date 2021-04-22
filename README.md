@@ -2,9 +2,15 @@
 
 # 🧧【美团】外卖神券天天领
 
-![workflow](https://img.shields.io/github/workflow/status/vv314/actions-mtz-coupons/%E9%A2%86%E7%BA%A2%E5%8C%85?label=%E9%A2%86%E7%BA%A2%E5%8C%85&logo=github%20actions&style=flat) ![last-commit](https://img.shields.io/github/last-commit/vv314/actions-mtz-coupons) ![release](https://img.shields.io/github/v/release/vv314/actions-mtz-coupons)
+![workflow](https://img.shields.io/github/workflow/status/vv314/actions-mtz-coupons/%E9%A2%86%E7%BA%A2%E5%8C%85?label=%E9%A2%86%E7%BA%A2%E5%8C%85&logo=github%20actions&style=flat) ![release](https://img.shields.io/github/v/release/vv314/actions-mtz-coupons) ![update](https://img.shields.io/github/last-commit/vv314/actions-mtz-coupons/main?label=update) ![fork](https://img.shields.io/github/forks/vv314/actions-mtz-coupons)
 
 外卖神券天天领，超值红包享不停；以自动化的方式领取美团红包。
+
+★ 多帐号支持，全村都能配上
+★ 并行化任务，数管齐下更有效率
+★ 多路消息通知，总有一个到达你
+★ Github Actions 部署，从未如此简单
+★ 升级提醒，新特性一手掌握
 
 ## 📕 使用教程
 
