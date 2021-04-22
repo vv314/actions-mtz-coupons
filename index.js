@@ -27,6 +27,7 @@ const notifier = new Notifier({
 })
 
 const NOTIFY_TITLE = '外卖神券天天领😋'
+const MAX_RETRY_COUNT = 2
 
 console.log(`
 ───────────────────────────────────────
@@ -97,35 +98,37 @@ function sendGlobalNotify(tasks) {
 }
 
 async function doJob(account, progress) {
-  const couponsInfo = await getCoupons(account.token)
-  const { code, data, msg, error } = couponsInfo
+  const res = await getCoupons(account.token, MAX_RETRY_COUNT)
 
   console.log(
     `\n────────── [${progress.mark()}] 账号: ${account.alias} ──────────\n`
   )
 
-  if (code != 0) {
-    console.log(msg, error, '\n')
-    console.log('😦 领取失败')
+  if (res.code != 0) {
+    console.log(res.msg, res.error)
+    res.retryTimes && console.log(`重试: ${res.retryTimes} 次`)
+    console.log('\n😦 领取失败')
 
     return {
       user: account.alias,
-      data: `领取失败: ${msg}`,
+      data: `领取失败: ${res.msg}`,
       pushInfo: []
     }
   }
 
-  console.log(...data.coupons)
-  console.log(`\n红包已放入账号：${data.phone}`)
+  const { coupons, phone } = res.data
+
+  console.log(...coupons)
+  console.log(`\n红包已放入账号：${phone}`)
   console.log(`\n🎉 领取成功！`)
 
-  const message = stringifyCoupons(data.coupons)
+  const message = stringifyCoupons(coupons)
   const pushInfo = sendUserNotify(message, account)
 
   return { user: account.alias, data: message, pushInfo }
 }
 
-async function runTask(tokenList) {
+async function runTaskQueue(tokenList) {
   const asyncPool = pLimit(5)
   const progress = {
     count: 0,
@@ -169,7 +172,7 @@ async function main() {
   await printRule()
 
   const tokens = parseToken(TOKEN)
-  const tasks = await runTask(tokens)
+  const tasks = await runTaskQueue(tokens)
 
   const userPushInfo = tasks.map(info => info.pushInfo).flat()
   const globalPushInfo = sendGlobalNotify(tasks)
