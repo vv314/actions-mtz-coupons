@@ -1,7 +1,13 @@
 const updateNotifier = require('../lib/update-notifier')
 
 async function checkUpdate() {
-  const message = await updateNotifier()
+  let message
+
+  try {
+    message = await updateNotifier()
+  } catch (e) {
+    console.log('update 执行失败', e)
+  }
 
   if (!message) return
 

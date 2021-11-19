@@ -1,5 +1,5 @@
 const parseToken = require('../lib/parse-token')
-const { getRule, getCoupons } = require('../lib/coupons')
+const { getCoupons } = require('../lib/coupons')
 
 const TOKEN = process.env.TOKEN
 
