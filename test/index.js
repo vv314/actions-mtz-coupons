@@ -1,9 +1,7 @@
 require('dotenv').config()
 
-const fetch = require('node-fetch')
-const querystring = require('querystring')
-
-// require('./notify')
+require('./notify')
+require('./userInfo')
 require('./parseToken')
 require('./coupons')
 require('./update')
