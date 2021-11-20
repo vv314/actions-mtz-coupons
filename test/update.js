@@ -1,18 +1,19 @@
 const updateNotifier = require('../lib/update-notifier')
 
 async function checkUpdate() {
-  let message
+  console.log('\n## 检查更新 ##')
 
   try {
-    message = await updateNotifier()
+    const timeout = 5000
+    const message = await updateNotifier(timeout)
+
+    if (!message) return console.log('无更新')
+
+    console.log(`\n—————————— 更新信息 ——————————\n`)
+    console.log(message)
   } catch (e) {
-    console.log('update 执行失败', e)
+    console.log('执行失败', e)
   }
-
-  if (!message) return
-
-  console.log(`\n—————————— 更新提醒 ——————————\n`)
-  console.log(message)
 }
 
-checkUpdate()
+module.exports = checkUpdate

@@ -2,9 +2,15 @@ const parseToken = require('../lib/parse-token')
 const TOKEN = process.env.TOKEN
 
 async function main() {
-  const tokens = parseToken(TOKEN)
+  console.log('\n## 解析 token ##')
 
-  console.log('tokens', tokens)
+  try {
+    const tokens = parseToken(TOKEN)
+
+    console.log('tokens', tokens)
+  } catch (e) {
+    console.log('执行失败')
+  }
 }
 
-main()
+module.exports = main

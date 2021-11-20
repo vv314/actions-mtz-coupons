@@ -23,6 +23,12 @@ async function getUserInfo(token) {
   }).then((rep) => rep.json())
 }
 
-Promise.all(tokens.map((t) => getUserInfo(t.token))).then((res) => {
+async function main() {
+  console.log('\n## 获取用户信息 ##')
+
+  const res = await Promise.all(tokens.map((t) => getUserInfo(t.token)))
+
   console.log('users', res)
-})
+}
+
+module.exports = main
