@@ -28,6 +28,7 @@ const notifier = new Notifier({
 
 const NOTIFY_TITLE = '外卖神券天天领😋'
 const MAX_RETRY_COUNT = 2
+const CHECK_UPDATE_TIMEOUT = 5000
 
 console.log(`
 ───────────────────────────────────────
@@ -152,11 +153,11 @@ async function printNotifyResult(pushInfo) {
   return Promise.all(pushInfo)
 }
 
-async function checkUpdate() {
+async function checkUpdate(timeout) {
   let message
 
   try {
-    message = await updateNotifier()
+    message = await updateNotifier(timeout)
   } catch (e) {
     console.log('\n', e)
   }
@@ -178,7 +179,7 @@ async function main() {
   // 打印通知结果，用户通知优先
   await printNotifyResult(userPushInfo.concat(globalPushInfo))
 
-  checkUpdate()
+  checkUpdate(CHECK_UPDATE_TIMEOUT)
 }
 
 main()
