@@ -122,8 +122,9 @@ Github Actions 工作流支持**手动**与**自动**两种触发方式
 URL 组成：host/:key/:body
 示例: https://api.day.app/kkWwxxxq5NpWx/推送内容...
 
+host: 服务域名
 key: 推送 key，设备唯一标识
-body: 推送内容
+body: 自定义推送内容
 ```
 
 ##### 用户通知配置

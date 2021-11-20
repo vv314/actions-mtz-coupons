@@ -106,7 +106,7 @@ async function doJob(account, progress) {
     return {
       user: accountName,
       data: `领取失败: ${res.msg}`,
-      pushInfo: []
+      userPushInfo: []
     }
   }
 
