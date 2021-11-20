@@ -7,18 +7,19 @@
   "author": "Vincent <vv314@foxmail.com>",
   "main": "index.js",
   "scripts": {
+    "start": "node index",
     "test": "node test/index",
-    "dev": "LOCAL_TEST=true node index",
-    "sync": "node ./sync-upstream",
-    "start": "node index"
+    "start:local": "node index.local",
+    "sync": "node ./sync-upstream"
   },
   "dependencies": {
-    "dotenv": "^8.2.0",
     "node-fetch": "^2.6.1",
     "p-limit": "^3.1.0",
     "semver": "^7.3.5"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "dotenv": "^8.2.0"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/vv314/actions-mtwm-coupons.git"

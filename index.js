@@ -1,11 +1,5 @@
-// 本地调试用
-// 参考 https://github.com/motdotla/dotenv
-if (process.env.LOCAL_TEST) {
-  require('dotenv').config()
-}
-
-process.on('unhandledRejection', (err) => {
-  throw err
+process.on('unhandledRejection', (e) => {
+  console.log('程序执行异常', e)
 })
 
 const pLimit = require('p-limit')
