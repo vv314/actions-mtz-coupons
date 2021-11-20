@@ -6,9 +6,9 @@
 
 外卖神券天天领，超值红包享不停；以自动化的方式领取美团红包。
 
-> ★ 多帐号支持，全村都能配上<br/>★ 并行化任务，数管齐下更有效率<br/>★ 异常重试，一次不行再来一次<br/>★ 多路消息通知，总有一个到达你<br/>★ Github Actions 部署，从未如此简单
+> ★ 专注领劵，不搞没用的<br/>★ 多帐号支持，全村都能配上<br/>★ 并行化任务，数管齐下更有效率<br/>★ 异常重试，一次不行再来一次<br/>★ 多路消息通知，总有一个到达你<br/>★ Github Actions 部署，从未如此简单
 
-## 📕 使用教程
+## 一、📕 使用手册
 
 #### 获取账号 TOKEN
 
@@ -20,7 +20,7 @@
 token=Js3xxxxFyy_Aq-rOnxMte6vKPV4AAAAA6QwAADgqRBSfcmNqyuG8CQ7JDL7xxxxNGbfF7tPNV5347_ANLcydua_JHCSRj0_xxxg9xx;
 ```
 
-### 🚀 部署
+### 1.1 🚀 部署
 
 使用 [GitHub Actions](https://docs.github.com/cn/actions) 部署：
 
@@ -34,24 +34,36 @@ token=Js3xxxxFyy_Aq-rOnxMte6vKPV4AAAAA6QwAADgqRBSfcmNqyuG8CQ7JDL7xxxxNGbfF7tPNV5
    3. 点击侧边栏 `Secrets`（密码）条目
    4. 点击 `New repository secret` 创建仓库密码
       1. 在 `Name` 输入框中填入 `TOKEN`
-      2. 在 `Value` 输入框中填入从 cookie 中提取的 token 值
+      2. 在 `Value` 输入框中填入从 cookie 中提取的 token 值（详见下文 TOKEN 配置）
    5. 点击 `Add secret` 保存配置
 
 _Fork 后的项目可执行 `npm run sync` 同步上游更新，详细参考【脚本更新】章节_
 
-### TOKEN 格式
+#### 脚本触发方式
 
-`TOKEN` Secret 支持 `String` 或 `JSON` 对象两种数据格式。
-当配置 `String` 类型时，值为 cookie 中提取的 token 信息；
-当配置 `JSON` 对象类型时，应包含以下属性：
+Github Actions 工作流支持**手动**与**自动**两种触发方式
 
-| 属性名  | 类型   | 默认值    | 必填 | 说明                     |
-| ------- | ------ | --------- | ---- | ------------------------ |
-| token   | string |           | 是   | 账号 token               |
-| alias   | string | token\<i> | 否   | 账号别名，便于区分多账户 |
-| qywxUid | string |           | 否   | 企业微信通知，用户 id    |
-| tgUid   | string |           | 否   | Telegram 通知，用户 id   |
-| barkKey | string |           | 否   | Bark 通知，推送 Key      |
+- 自动触发，每日 `11:00` 前定时执行（已开启）
+- 手动触发
+  - [在项目主页上调用](https://docs.github.com/cn/actions/managing-workflow-runs/manually-running-a-workflow#)
+  - [使用 REST API 调用](https://docs.github.com/cn/rest/reference/actions#create-a-workflow-dispatch-event)
+
+### 1.2 🔏 TOKEN 配置
+
+`TOKEN` Secret 支持 `String` 或 `JSON` 对象两种数据格式：
+
+- String 类型 - 简单配置，值为 cookie 中提取的 token 信息
+- JSON 类型 - 高级配置，适用于一对一推送以及多账户支持
+
+当 `TOKEN` 为 `JSON` 类型时，应包含以下属性：
+
+| 属性名  | 类型   | 默认值 | 必填 | 说明                     |
+| ------- | ------ | ------ | ---- | ------------------------ |
+| token   | string |        | 是   | 账号 token               |
+| alias   | string |        | 否   | 账号别名，便于区分多账户 |
+| qywxUid | string |        | 否   | 企业微信通知，用户 id    |
+| tgUid   | string |        | 否   | Telegram 通知，用户 id   |
+| barkKey | string |        | 否   | Bark 通知，推送 Key      |
 
 _注意：企业微信通知需配置 `QYWX_SEND_CONF` Secret，Telegram 通知需配置 `TG_BOT_TOKEN` Secret，详见【消息通知】章节_
 
@@ -73,46 +85,52 @@ JSON 配置示例:
 
 #### 多账户配置
 
-`TOKEN` Secret 配置为数组时，可传入多个账户配置。
+当 `TOKEN` 指定为数组时，代表启用账户配置。每个配置成员均支持 `String` 和 `JSON` 格式。
 
-混合配置示例:
+配置示例:
 
 ```json
 [
   "Js3xxxxFyy_Aq-rOnxMte6vKPV4AAAAA6QwAADgqRBSfcmNqyuG8CQ7JDL7xxxxNGbfF7tPNV5347_ANLcydua_JHCSRj0_xxxg9xx",
   {
     "token": "3R2xxxxxUqS_Aq-rOnxMte6vKPV4AAAAA6QwAADgqRBSfcmNqyuG8CQ7JDL7xxxxNGbfF7tPNV5347_ANLcydua_JHCSRj0_xxxg9xx",
-    "alias": "鱼言",
+    "alias": "fish",
     "barkKey": "kkWwxxxq5NpWx",
     "qywxUid": "Vincent"
   }
 ]
 ```
 
-#### 脚本触发方式
+### 1.3 🔔 消息通知
 
-Github Actions 工作流支持**手动**与**自动**两种触发方式
+发送消息推送，通知程序运行结果。按照通知类型分为**用户通知**和**全局通知**：
 
-- 自动触发，每日 `11:05` 定时执行（已开启）
-- 手动触发
-  - [在项目主页上调用](https://docs.github.com/cn/actions/managing-workflow-runs/manually-running-a-workflow#)
-  - [使用 REST API 调用](https://docs.github.com/cn/rest/reference/actions#create-a-workflow-dispatch-event)
+- 用户通知：一对一推送，适用于多账户内的“乘客”
+- 全局通知：推送所有任务的执行情况，适用于程序管理者
 
-### 🔔 消息通知
+消息模板示例：
 
-通知运行结果。按照粒度分为**用户通知**和**全局通知**：
+```
+【外卖神券天天领😋】
+账号 xxx:
+- ￥5（满20可用）
+- ￥7（满35可用）
+- ￥3（满20可用）
 
-- 用户通知：每个账户执行时推送（TOKEN 中配置）
-- 全局通知：所有任务执行完毕后推送
+账号 xxx:
+- ￥5（满20可用）
+- ￥7（满35可用）
+...
+```
 
-通知支持下列推送平台：
+支持平台：
 
 - Bark
 - Telegram
 - 企业微信
 - Server 酱
 
-#### Bark（仅 iOS 支持）
+#### 1.3.1 Bark（仅 iOS 支持）
 
 [Bark](https://apps.apple.com/cn/app/id1403753865) 是一款可以接收自定义通知的 iOS 应用。
 
@@ -137,7 +155,7 @@ body: 自定义推送内容
 2. 进入项目 "Settings" → "Secrets" 配置页，点击 `New repository secret`
    - 新建 `BARK_KEY` 项，填入推送 key
 
-#### Telegram
+#### 1.3.2 Telegram
 
 [Telegram](https://telegram.org) 是一款跨平台的专注于安全和速度的聊天软件。通过创建 Telegram Bot，可发送自定义通知。
 
@@ -168,7 +186,7 @@ _已拥有 Telegram Bot？直接参考下节 **【配置 Bot Token】**_
 2. 进入项目 "Settings" → "Secrets" 配置页，点击 `New repository secret`
    - 新建 `TG_USER_ID` 项，填入用户 ID
 
-#### 企业微信
+#### 1.3.3 企业微信
 
 [企业微信](https://work.weixin.qq.com) 是微信团队出品的企业通讯与办公应用，具有与微信互联的能力。
 
@@ -216,7 +234,7 @@ _已拥有企业微信应用？直接参考下节 **【配置企业应用】**_
 
 `QYWX_SEND_CONF` Secret 设置 `toUser` 属性
 
-#### Server 酱（仅支持全局通知）
+#### 1.3.4 Server 酱（仅支持全局通知）
 
 [Server 酱](https://sct.ftqq.com) 是一款从服务器、路由器等设备上推消息到手机的工具。
 
@@ -224,11 +242,11 @@ _已拥有企业微信应用？直接参考下节 **【配置企业应用】**_
 2. 进入项目 "Settings" → "Secrets" 配置页，点击 `New repository secret`
    - 新建 `SC_SEND_KEY` 项，填入 `SendKey`
 
-## 🔄 脚本更新
+## 二、🔄 脚本更新
 
 此项目将长期维护，为了确保副本能够及时享受到上游更新，请定期执行同步操作。
 
-### 使用命令同步（推荐）
+### 2.1 使用命令同步（推荐）
 
 执行 npm script：
 
@@ -238,13 +256,13 @@ npm run sync
 
 脚本执行后会拉取上游仓库的最新主分支代码，与本地主分支进行合并，最后合并结果同步到远程仓库。
 
-### 手动同步
+### 2.2 手动同步
 
 参考 Github 官方文档 [同步复刻](https://docs.github.com/cn/github/collaborating-with-issues-and-pull-requests/syncing-a-fork)
 
-## 🛠 开发 & 测试
+## 三、🛠 开发与测试
 
-项目根目录下创建 `.env` 文件，填入 `Secrets` 信息。
+为了便于调试，项目使用 [dotenv](https://github.com/motdotla/dotenv) 储存本地配置，在项目根目录下创建 `.env` 文件，填入 `Secrets` 信息。
 
 示例:
 
@@ -263,12 +281,18 @@ SC_SEND_KEY=SCTxxxxxTPIvAYxxxxxXjGGzvCfUxxxxxx
 QYWX_SEND_CONF={"agentId": "1000002", "corpId": "wwxxxe9ddxxxc50xxx", "corpSecret": "12Qxxxo4hxxxyedtxxxdyfVxxxCqh6xxxF0zg3xxxNI", "toUser": "@all"}
 ```
 
-运行调试命令：
+### 3.1 本地调试
 
 ```bash
-yarn dev
+npm run start:local
 ```
 
-## 📜 声明
+### 3.2 单元测试
+
+```bash
+npm run test
+```
+
+## 四、📜 声明
 
 本项目仅供学习与研究之用，请勿用于商业或非法用途。原作者不能完全保证项目的合法性，准确性和安全性，因使用不当造成的任何损失与损害，与原作者无关。请仔细阅读此声明，一旦您使用并复制了本项目，则视为已接受此声明。
