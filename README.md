@@ -126,6 +126,7 @@ JSON 配置示例:
 支持平台：
 
 - Bark
+- 飞书
 - Telegram
 - 企业微信
 - Server 酱
@@ -134,7 +135,9 @@ JSON 配置示例:
 
 [Bark](https://apps.apple.com/cn/app/id1403753865) 是一款可以接收自定义通知的 iOS 应用。
 
-打开 Bark App 获取推送 key：
+##### 获取推送 key
+
+打开 Bark App 查看推送 url：
 
 ```
 URL 组成：host/:key/:body
@@ -145,17 +148,54 @@ key: 推送 key，设备唯一标识
 body: 自定义推送内容
 ```
 
+提取推送 `key`，本例为 `kkWwxxxq5NpWx`
+
 ##### 用户通知配置
 
-`TOKEN` Secret 配置为 JSON 格式，添加 `barkKey` 属性
+`TOKEN` Secret 配置为 JSON 格式，添加 `barkKey` 属性，填入推送 key。
 
 ##### 全局通知配置
 
-1. 提取推送 `key`（本例为 `kkWwxxxq5NpWx`）
-2. 进入项目 "Settings" → "Secrets" 配置页，点击 `New repository secret`
-   - 新建 `BARK_KEY` 项，填入推送 key
+进入项目 "Settings" → "Secrets" 配置页，点击 `New repository secret`
 
-#### 1.3.2 Telegram
+- 新建 `BARK_KEY` 项，填入推送 key
+
+#### 1.3.2 飞书
+
+[飞书](https://www.feishu.cn/)是字节跳动旗下先进企业协作与管理平台，提供一站式的无缝办公协作能力。
+
+##### 创建飞书捷径
+
+1. 打开[飞书应用目录](https://app.feishu.cn/)，选择 "企业服务" → "连接器" → "[飞书捷径](https://app.feishu.cn/app/cli_9c2e4621576f1101)"，点击“获取”（使用）按钮安装应用
+2. 打开[飞书捷径](https://applink.feishu.cn/client/app_share/open?appId=cli_9c2e4621576f1101)应用，在 “按应用查看模板” 栏目筛选 “webhook”，选择使用 “webhook 收到请求时通知”
+3. 配置 webhook 捷径
+   1. 点击 "Catch hook" 卡片
+      - 复制保存 `webhook 地址`(例：https://www.feishu.cn/flow/api/trigger-webhook/3391dxxxxx60a2d5xxxxx2073b3xxxxx)
+      - 在`参数`项，填入以下内容：
+      ```json
+      {
+        "mtz": {
+          "title": "外卖神券天天领",
+          "content": "hello world!"
+        }
+      }
+      ```
+   2. 点击“通过飞书捷径机器人发送消息”卡片
+      - 在 `消息标题` 项，清空已有内容，点击右侧加号按钮选择 `mtz.title`
+      - 在 `消息内容` 项，清空已有内容，点击右侧加号选择 `mtz.content`
+   3. 点击“保存”按钮应用配置
+
+##### 用户通知配置
+
+`TOKEN` Secret 配置为 JSON 格式，添加 `larkWebhook` 属性，填入`webhook 地址`。
+
+##### 全局通知配置
+
+进入项目 "Settings" → "Secrets" 配置页，点击 `New repository secret`
+
+- 新建 `LARK_WEBHOOK` 项，填入`webhook 地址`
+
+#### 1.3.3 Telegram
 
 [Telegram](https://telegram.org) 是一款跨平台的专注于安全和速度的聊天软件。通过创建 Telegram Bot，可发送自定义通知。
 
@@ -176,15 +216,19 @@ _已拥有 Telegram Bot？直接参考下节 **【配置 Bot Token】**_
 2. 进入项目 "Settings" → "Secrets" 配置页，点击 `New repository secret`
    - 新建 `TG_BOT_TOKEN` 项，填入 bot token
 
+##### 获取用户 ID
+
+Telegram 搜索 [@userinfobot](https://t.me/useridinfobot)，点击 `/start`，获取用户 ID。
+
 ##### 用户通知配置
 
-`TOKEN` Secret 配置为 JSON 格式，添加 `tgUid` 属性
+`TOKEN` Secret 配置为 JSON 格式，添加 `tgUid` 属性，填入用户 ID。
 
 ##### 全局通知配置
 
-1. Telegram 搜索 [@userinfobot](https://t.me/useridinfobot)，点击 `/start`，获取用户 ID
-2. 进入项目 "Settings" → "Secrets" 配置页，点击 `New repository secret`
-   - 新建 `TG_USER_ID` 项，填入用户 ID
+进入项目 "Settings" → "Secrets" 配置页，点击 `New repository secret`
+
+- 新建 `TG_USER_ID` 项，填入用户 ID
 
 #### 1.3.3 企业微信
 
