@@ -2,6 +2,7 @@ const Notifier = require('../lib/Notifier')
 
 const notifier = new Notifier({
   barkKey: process.env.BARK_KEY,
+  larkWebhook: process.env.LARK_WEBHOOK,
   workWechat: process.env.QYWX_SEND_CONF,
   serverChanToken: process.env.SC_SEND_KEY,
   telegram: {

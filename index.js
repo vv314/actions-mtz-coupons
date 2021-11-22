@@ -3,7 +3,7 @@ process.on('unhandledRejection', (e) => {
 })
 
 const pLimit = require('p-limit')
-const Notifier = require('./lib/Notifier')
+const Notifier = require('./lib/notifier')
 const { version } = require('./package.json')
 const parseToken = require('./lib/parse-token')
 const updateNotifier = require('./lib/update-notifier')
@@ -12,6 +12,7 @@ const { getCoupons } = require('./lib/coupons')
 const TOKEN = process.env.TOKEN
 const notifier = new Notifier({
   barkKey: process.env.BARK_KEY,
+  larkWebhook: process.env.LARK_WEBHOOK,
   workWechat: process.env.QYWX_SEND_CONF,
   serverChanToken: process.env.SC_SEND_KEY,
   telegram: {
