@@ -38,3 +38,4 @@ jobs:
           TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
           SC_SEND_KEY: ${{ secrets.SC_SEND_KEY }}
           QYWX_SEND_CONF: ${{ secrets.QYWX_SEND_CONF }}
+          LARK_WEBHOOK: ${{ secrets.LARK_WEBHOOK }}
