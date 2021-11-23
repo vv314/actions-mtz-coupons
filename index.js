@@ -63,6 +63,16 @@ function sendUserNotify(msg, account, userInfo) {
     result.push(qywxRes)
   }
 
+  if (account.larkWebhook) {
+    const larkRes = notifier
+      .sendLark(NOTIFY_TITLE, msg, {
+        webhook: account.larkWebhook
+      })
+      .then((res) => `@${userName} ${res.msg}`)
+
+    result.push(larkRes)
+  }
+
   if (account.tgUid) {
     const tgRes = notifier
       .sendTelegram(NOTIFY_TITLE, msg, { uid: account.tgUid })
