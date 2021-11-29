@@ -97,7 +97,7 @@ function parseAccountName(account, user = {}) {
 }
 
 async function doJob(account, progress) {
-  const res = await getCoupons(account.token, MAX_RETRY_COUNT)
+  const res = await getCoupons(account.token, { maxRetry: MAX_RETRY_COUNT })
   const accountName = parseAccountName(account)
 
   console.log(
