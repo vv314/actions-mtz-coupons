@@ -6,7 +6,7 @@
 
 外卖神券天天领，超值红包享不停；以自动化的方式领取美团红包。
 
-> ★ 专注领劵，不搞没用的<br/>★ 多帐号支持，全村都能配上<br/>★ 并行化任务，数管齐下更有效率<br/>★ 异常重试，一次不行再来一次<br/>★ 多路消息通知，总有一个到达你<br/>★ Github Actions 部署，从未如此简单
+> ★ 专注领劵，不搞杂七杂八<br/>★ 多帐号支持，全村都能配上<br/>★ 并行化任务，数管齐下更有效率<br/>★ 异常重试，一次不行再来一次<br/>★ 多路消息通知，总有一个到达你<br/>★ Github Actions 部署，从未如此简单
 
 ## 一、📕 使用手册
 
@@ -57,13 +57,14 @@ Github Actions 工作流支持**手动**与**自动**两种触发方式
 
 当 `TOKEN` 为 `JSON` 类型时，应包含以下属性：
 
-| 属性名  | 类型   | 默认值 | 必填 | 说明                     |
-| ------- | ------ | ------ | ---- | ------------------------ |
-| token   | string |        | 是   | 账号 token               |
-| alias   | string |        | 否   | 账号别名，便于区分多账户 |
-| qywxUid | string |        | 否   | 企业微信通知，用户 id    |
-| tgUid   | string |        | 否   | Telegram 通知，用户 id   |
-| barkKey | string |        | 否   | Bark 通知，推送 Key      |
+| 属性名      | 类型   | 默认值 | 必填 | 说明                     |
+| ----------- | ------ | ------ | ---- | ------------------------ |
+| token       | string |        | 是   | 账号 token               |
+| alias       | string |        | 否   | 账号别名，便于区分多账户 |
+| qywxUid     | string |        | 否   | 企业微信通知，用户 id    |
+| tgUid       | string |        | 否   | Telegram 通知，用户 id   |
+| barkKey     | string |        | 否   | Bark 通知，推送 Key      |
+| larkWebhook | string |        | 否   | 飞书通知，webhook 链接   |
 
 _注意：企业微信通知需配置 `QYWX_SEND_CONF` Secret，Telegram 通知需配置 `TG_BOT_TOKEN` Secret，详见【消息通知】章节_
 
@@ -130,6 +131,7 @@ JSON 配置示例:
 - Telegram
 - 企业微信
 - Server 酱
+- pushplus
 
 #### 1.3.1 Bark（仅 iOS 支持）
 
@@ -285,6 +287,14 @@ _已拥有企业微信应用？直接参考下节 **【配置企业应用】**_
 1. 打开 Server 酱 [SendKey](https://sct.ftqq.com/sendkey) 页面，获取 `SendKey`
 2. 进入项目 "Settings" → "Secrets" 配置页，点击 `New repository secret`
    - 新建 `SC_SEND_KEY` 项，填入 `SendKey`
+
+#### 1.3.5 pushplus（仅支持全局通知）
+
+[pushplus](https://www.pushplus.plus/) 推送加。是一个集成了微信、企业微信、钉钉、短信、邮件等渠道的信息推送平台。
+
+1. 进入 [pushplus 官网](https://www.pushplus.plus/push1.html)，登录后获取 pushplus `token`
+2. 进入项目 "Settings" → "Secrets" 配置页，点击 `New repository secret`
+   - 新建 `PUSHPLUS_TOKEN` 项，填入 `token`
 
 ## 二、🔄 脚本更新
 

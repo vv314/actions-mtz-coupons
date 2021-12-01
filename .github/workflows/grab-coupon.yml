@@ -13,7 +13,7 @@ on:
     #         │ │ │ ┌──── month (1 - 12 or JAN-DEC)
     #         │ │ │ │ ┌── day of the week (0 - 6 or SUN-SAT)
     #         │ │ │ │ │
-    - cron: '40 2 * * *'
+    - cron: '45 2 * * *'
 
 jobs:
   start:
@@ -39,3 +39,4 @@ jobs:
           SC_SEND_KEY: ${{ secrets.SC_SEND_KEY }}
           QYWX_SEND_CONF: ${{ secrets.QYWX_SEND_CONF }}
           LARK_WEBHOOK: ${{ secrets.LARK_WEBHOOK }}
+          PUSHPLUS_TOKEN: ${{ secrets.PUSHPLUS_TOKEN }}
