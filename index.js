@@ -15,6 +15,7 @@ const notifier = new Notifier({
   larkWebhook: process.env.LARK_WEBHOOK,
   workWechat: process.env.QYWX_SEND_CONF,
   serverChanToken: process.env.SC_SEND_KEY,
+  pushplusToken: process.env.PUSHPLUS_TOKEN,
   telegram: {
     botToken: process.env.TG_BOT_TOKEN,
     userId: process.env.TG_USER_ID
