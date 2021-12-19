@@ -9,7 +9,7 @@ async function main() {
   const tokens = parseToken(TOKEN)
 
   try {
-    const res = await getCoupons(tokens[1].token, {
+    const res = await getCoupons(tokens[0].token, {
       // proxy: 'http://127.0.0.1:8887'
     })
 
