@@ -57,14 +57,15 @@ Github Actions 工作流支持**手动**与**自动**两种触发方式
 
 当 `TOKEN` 为 `JSON` 类型时，应包含以下属性：
 
-| 属性名      | 类型   | 默认值 | 必填 | 说明                     |
-| ----------- | ------ | ------ | ---- | ------------------------ |
-| token       | string |        | 是   | 账号 token               |
-| alias       | string |        | 否   | 账号别名，便于区分多账户 |
-| qywxUid     | string |        | 否   | 企业微信通知，用户 id    |
-| tgUid       | string |        | 否   | Telegram 通知，用户 id   |
-| barkKey     | string |        | 否   | Bark 通知，推送 Key      |
-| larkWebhook | string |        | 否   | 飞书通知，webhook 链接   |
+| 属性名      | 类型   | 默认值 | 必填 | 说明                                                                                                                      |
+| ----------- | ------ | ------ | ---- | ------------------------------------------------------------------------------------------------------------------------- |
+| token       | string |        | 是   | 账号 token                                                                                                                |
+| alias       | string |        | 否   | 账号别名，便于区分多账户                                                                                                  |
+| qywxUid     | string |        | 否   | 企业微信通知，用户 id                                                                                                     |
+| tgUid       | string |        | 否   | Telegram 通知，用户 id                                                                                                    |
+| barkKey     | string |        | 否   | Bark 通知，推送 Key                                                                                                       |
+| larkWebhook | string |        | 否   | 飞书通知，webhook 链接                                                                                                    |
+| dtWebhook   | string |        | 否   | 钉钉通知，webhook 链接。当设置**加签**时，需按照`secret\|webhook` 的格式将 secret 拼接至 webhook 之前（两者以 `\|` 分隔） |
 
 _注意：企业微信通知需配置 `QYWX_SEND_CONF` Secret，Telegram 通知需配置 `TG_BOT_TOKEN` Secret，详见【消息通知】章节_
 
@@ -128,6 +129,7 @@ JSON 配置示例:
 
 - Bark
 - 飞书
+- 钉钉
 - Telegram
 - 企业微信
 - Server 酱
@@ -197,7 +199,36 @@ body: 自定义推送内容
 
 - 新建 `LARK_WEBHOOK` 项，填入`webhook 地址`
 
-#### 1.3.3 Telegram
+#### 1.3.3 钉钉
+
+[钉钉](https://www.dingtalk.com/)是由阿里巴巴集团开发的智能移动办公平台，用于商务沟通和工作协同。
+
+##### 创建钉钉机器人\*
+
+_已拥有钉钉机器人？直接参考下节 **【配置 Bot Webhook】**_
+
+1. [创建](https://oa.dingtalk.com/register_new.htm)一个团队（群聊）
+2. 打开 PC 端钉钉，在群设置中选择 “智能群助手” → “添加机器人” → “自定义”
+3. 填写机器人自定义名称，配置安全设置。安全设置支持以下两种方式：
+   1. 自定义关键词：填入 `外卖`
+   2. 加签
+4. 复制 webhook 地址
+
+##### 配置 Bot Webhook
+
+**注意：当设置 “加签” 时，需按照`secret\|webhook` 的格式将 secret 拼接至 webhook 之前（两者以 `|` 分隔）**
+
+##### 用户通知配置
+
+`TOKEN` Secret 配置为 JSON 格式，添加 `dtWebhook` 属性，填入`webhook 地址`。
+
+##### 全局通知配置
+
+进入项目 "Settings" → "Secrets" 配置页，点击 `New repository secret`
+
+- 新建 `DINGTALK_WEBHOOK` 项，填入`webhook 地址`
+
+#### 1.3.4 Telegram
 
 [Telegram](https://telegram.org) 是一款跨平台的专注于安全和速度的聊天软件。通过创建 Telegram Bot，可发送自定义通知。
 
@@ -232,7 +263,7 @@ Telegram 搜索 [@userinfobot](https://t.me/useridinfobot)，点击 `/start`，�
 
 - 新建 `TG_USER_ID` 项，填入用户 ID
 
-#### 1.3.3 企业微信
+#### 1.3.5 企业微信
 
 [企业微信](https://work.weixin.qq.com) 是微信团队出品的企业通讯与办公应用，具有与微信互联的能力。
 
@@ -280,7 +311,7 @@ _已拥有企业微信应用？直接参考下节 **【配置企业应用】**_
 
 `QYWX_SEND_CONF` Secret 设置 `toUser` 属性
 
-#### 1.3.4 Server 酱（仅支持全局通知）
+#### 1.3.6 Server 酱（仅支持全局通知）
 
 [Server 酱](https://sct.ftqq.com) 是一款从服务器、路由器等设备上推消息到手机的工具。
 
@@ -288,7 +319,7 @@ _已拥有企业微信应用？直接参考下节 **【配置企业应用】**_
 2. 进入项目 "Settings" → "Secrets" 配置页，点击 `New repository secret`
    - 新建 `SC_SEND_KEY` 项，填入 `SendKey`
 
-#### 1.3.5 pushplus（仅支持全局通知）
+#### 1.3.7 pushplus（仅支持全局通知）
 
 [pushplus](https://www.pushplus.plus/) 推送加。是一个集成了微信、企业微信、钉钉、短信、邮件等渠道的信息推送平台。
 
@@ -333,6 +364,8 @@ TG_USER_ID=100000000
 SC_SEND_KEY=SCTxxxxxTPIvAYxxxxxXjGGzvCfUxxxxxx
 # 企业微信配置
 QYWX_SEND_CONF={"agentId": "1000002", "corpId": "wwxxxe9ddxxxc50xxx", "corpSecret": "12Qxxxo4hxxxyedtxxxdyfVxxxCqh6xxxF0zg3xxxNI", "toUser": "@all"}
+# 钉钉 webhook (加签)
+SEC69162axxxf59sdss23|https://oapi.dingtalk.com/robot/send?access_token=09bsdfa66xxxa608bsds
 ```
 
 ### 3.1 本地调试

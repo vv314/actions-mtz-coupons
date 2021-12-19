@@ -40,3 +40,4 @@ jobs:
           QYWX_SEND_CONF: ${{ secrets.QYWX_SEND_CONF }}
           LARK_WEBHOOK: ${{ secrets.LARK_WEBHOOK }}
           PUSHPLUS_TOKEN: ${{ secrets.PUSHPLUS_TOKEN }}
+          DINGTALK_WEBHOOK: ${{ secrets.DINGTALK_WEBHOOK }}
