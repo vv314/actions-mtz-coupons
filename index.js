@@ -20,6 +20,10 @@ const notifier = new Notifier({
   telegram: {
     botToken: process.env.TG_BOT_TOKEN,
     userId: process.env.TG_USER_ID
+  },
+  qmsg: {
+    token: process.env.QMSG_KEY,
+    qq: process.env.QMSG_ADMIN
   }
 })
 
@@ -88,6 +92,14 @@ function sendUserNotify(msg, account, userInfo) {
   if (account.tgUid) {
     const tgRes = notifier
       .sendTelegram(NOTIFY_TITLE, msg, { uid: account.tgUid })
+      .then((res) => `@${userName} ${res.msg}`)
+
+    result.push(tgRes)
+  }
+
+  if (account.qq) {
+    const tgRes = notifier
+      .sendQmsg(NOTIFY_TITLE, msg, { qq: account.qq })
       .then((res) => `@${userName} ${res.msg}`)
 
     result.push(tgRes)

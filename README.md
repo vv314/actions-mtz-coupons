@@ -66,6 +66,7 @@ Github Actions 工作流支持**手动**与**自动**两种触发方式
 | barkKey     | string |        | 否   | Bark 通知，推送 Key                                                                                                       |
 | larkWebhook | string |        | 否   | 飞书通知，webhook 链接                                                                                                    |
 | dtWebhook   | string |        | 否   | 钉钉通知，webhook 链接。当设置**加签**时，需按照`secret\|webhook` 的格式将 secret 拼接至 webhook 之前（两者以 `\|` 分隔） |
+| qq          | string |        | 否   | Qmsg 通知，qq 号                                                                                                          |
 
 _注意：企业微信通知需配置 `QYWX_SEND_CONF` Secret，Telegram 通知需配置 `TG_BOT_TOKEN` Secret，详见【消息通知】章节_
 
@@ -110,6 +111,19 @@ JSON 配置示例:
 - 用户通知：一对一推送，适用于多账户内的“乘客”
 - 全局通知：推送所有任务的执行情况，适用于程序管理者
 
+支持平台：
+
+|           | 用户通知 | 全局通知 | 备注                                             |
+| --------- | :------: | :------: | ------------------------------------------------ |
+| Bark      |    ✅    |    ✅    | 仅 iOS 支持                                      |
+| 飞书      |    ✅    |    ✅    |                                                  |
+| 钉钉      |    ✅    |    ✅    |                                                  |
+| Telegram  |    ✅    |    ✅    |                                                  |
+| 企业微信  |    ✅    |    ✅    |                                                  |
+| Server 酱 |          |    ✅    |                                                  |
+| pushplus  |          |    ✅    |                                                  |
+| Qmsg 酱   |    ☑️    |    ✅    | 平台方对非捐赠版有频次限制，将影响多账户通知通能 |
+
 消息模板示例：
 
 ```
@@ -125,21 +139,12 @@ JSON 配置示例:
 ...
 ```
 
-支持平台：
+#### 1.3.1 Bark
 
-- Bark
-- 飞书
-- 钉钉
-- Telegram
-- 企业微信
-- Server 酱
-- pushplus
+[Bark](https://apps.apple.com/cn/app/id1403753865) 是一款可以接收自定义通知的 iOS 应用
 
-#### 1.3.1 Bark（仅 iOS 支持）
-
-[Bark](https://apps.apple.com/cn/app/id1403753865) 是一款可以接收自定义通知的 iOS 应用。
-
-##### 获取推送 key
+<details>
+<summary><em>获取推送 key</em></summary>
 
 打开 Bark App 查看推送 url：
 
@@ -153,6 +158,8 @@ body: 自定义推送内容
 ```
 
 提取推送 `key`，本例为 `kkWwxxxq5NpWx`
+
+</details>
 
 ##### 用户通知配置
 
@@ -168,7 +175,8 @@ body: 自定义推送内容
 
 [飞书](https://www.feishu.cn/)是字节跳动旗下先进企业协作与管理平台，提供一站式的无缝办公协作能力。
 
-##### 创建飞书捷径
+<details>
+<summary><em>创建飞书捷径</em></summary>
 
 1. 打开[飞书应用目录](https://app.feishu.cn/)，选择 "企业服务" → "连接器" → "[飞书捷径](https://app.feishu.cn/app/cli_9c2e4621576f1101)"，点击“获取”（使用）按钮安装应用
 2. 打开[飞书捷径](https://applink.feishu.cn/client/app_share/open?appId=cli_9c2e4621576f1101)应用，在 “按应用查看模板” 栏目筛选 “webhook”，选择使用 “webhook 收到请求时通知”
@@ -189,6 +197,8 @@ body: 自定义推送内容
       - 在 `消息内容` 项，清空已有内容，点击右侧加号选择 `mtz.content`
    3. 点击“保存”按钮应用配置
 
+</details>
+
 ##### 用户通知配置
 
 `TOKEN` Secret 配置为 JSON 格式，添加 `larkWebhook` 属性，填入`webhook 地址`。
@@ -203,9 +213,10 @@ body: 自定义推送内容
 
 [钉钉](https://www.dingtalk.com/)是由阿里巴巴集团开发的智能移动办公平台，用于商务沟通和工作协同。
 
-##### 创建钉钉机器人\*
+**注意：当设置 “加签” 时，需按照`secret\|webhook` 的格式将 secret 拼接至 webhook 之前（两者以 `|` 分隔）**
 
-_已拥有钉钉机器人？直接参考下节 **【配置 Bot Webhook】**_
+<details>
+<summary><em>创建钉钉机器人*</em></summary>
 
 1. [创建](https://oa.dingtalk.com/register_new.htm)一个团队（群聊）
 2. 打开 PC 端钉钉，在群设置中选择 “智能群助手” → “添加机器人” → “自定义”
@@ -214,9 +225,7 @@ _已拥有钉钉机器人？直接参考下节 **【配置 Bot Webhook】**_
    2. 加签
 4. 复制 webhook 地址
 
-##### 配置 Bot Webhook
-
-**注意：当设置 “加签” 时，需按照`secret\|webhook` 的格式将 secret 拼接至 webhook 之前（两者以 `|` 分隔）**
+</details>
 
 ##### 用户通知配置
 
@@ -232,9 +241,8 @@ _已拥有钉钉机器人？直接参考下节 **【配置 Bot Webhook】**_
 
 [Telegram](https://telegram.org) 是一款跨平台的专注于安全和速度的聊天软件。通过创建 Telegram Bot，可发送自定义通知。
 
-##### 创建 Telegram Bot\*
-
-_已拥有 Telegram Bot？直接参考下节 **【配置 Bot Token】**_
+<details>
+<summary><em>创建 Telegram Bot*</em></summary>
 
 1. Telegram 搜索 [@BotFather](https://t.me/botfather)，点击 `/start` 启用 bot
 2. 点击 `/newbot` 创建自定义 bot
@@ -243,15 +251,21 @@ _已拥有 Telegram Bot？直接参考下节 **【配置 Bot Token】**_
 3. 创建成功后，将会返回你的 bot token（例：`1689581149:AAGYVVjEHsaNxxxT8eQxxxshwr2o4Pxxxu86`）
 4. Telegram 搜索刚刚创建的 bot id（本例: `test_bot`），点击 `/start` 启用 bot
 
-##### 配置 Bot Token
+##### 获取 Bot Token
 
-1. Telegram 搜索 [@BotFather](https://t.me/botfather)，点击 `/mybots`，获取 bot token
-2. 进入项目 "Settings" → "Secrets" 配置页，点击 `New repository secret`
-   - 新建 `TG_BOT_TOKEN` 项，填入 bot token
+Telegram 搜索 [@BotFather](https://t.me/botfather)，点击 `/mybots`，获取 bot token
 
 ##### 获取用户 ID
 
 Telegram 搜索 [@userinfobot](https://t.me/useridinfobot)，点击 `/start`，获取用户 ID。
+
+</details>
+
+##### 配置 Bot Token
+
+进入项目 "Settings" → "Secrets" 配置页，点击 `New repository secret`
+
+- 新建 `TG_BOT_TOKEN` 项，填入 bot token
 
 ##### 用户通知配置
 
@@ -267,21 +281,28 @@ Telegram 搜索 [@userinfobot](https://t.me/useridinfobot)，点击 `/start`，�
 
 [企业微信](https://work.weixin.qq.com) 是微信团队出品的企业通讯与办公应用，具有与微信互联的能力。
 
-##### 创建企业微信应用\*
-
-_已拥有企业微信应用？直接参考下节 **【配置企业应用】**_
+<details>
+<summary><em>创建企业微信应用*</em></summary>
 
 1. PC 端打开[企业微信官网](https://work.weixin.qq.com/)，注册一个企业
 2. 注册完成后，进入“[应用管理](https://work.weixin.qq.com/wework_admin/frame#apps)” → “应用” → “自建”，点击 `➕创建应用`
 3. 完善应用名称与 logo 信息，可见范围选择公司名
 
-##### 配置企业应用
+##### 获取应用信息
 
-1. 在管理后台 “[我的企业](https://work.weixin.qq.com/wework_admin/frame#profile)” → “企业信息” 下获取 “企业 ID”
-2. 在管理后台 “[应用管理](https://work.weixin.qq.com/wework_admin/frame#apps)” → “应用” → “自建”，点进目标应用，获取 `AgentId`（应用 ID）
-3. 在管理后台 “[应用管理](https://work.weixin.qq.com/wework_admin/frame#apps)” → “应用” → “自建”，点进目标应用，获取 `Secret`（应用钥匙）
-4. 进入项目 "Settings" → "Secrets" 配置页，点击 `New repository secret`
-   - 新建 `QYWX_SEND_CONF` 项，填入 **\<JSON 配置>**
+进入企业微信管理后台：
+
+1. “[我的企业](https://work.weixin.qq.com/wework_admin/frame#profile)” → “企业信息” 下获取 “企业 ID”
+2. “[应用管理](https://work.weixin.qq.com/wework_admin/frame#apps)” → “应用” → “自建”，点进目标应用，获取 `AgentId`（应用 ID）
+3. “[应用管理](https://work.weixin.qq.com/wework_admin/frame#apps)” → “应用” → “自建”，点进目标应用，获取 `Secret`（应用钥匙）
+
+</details>
+
+##### 配置企业微信通知
+
+进入项目 "Settings" → "Secrets" 配置页，点击 `New repository secret`
+
+- 新建 `QYWX_SEND_CONF` 项，填入 **\<JSON 配置>**
 
 **JSON 配置**字段说明:
 
@@ -315,17 +336,61 @@ _已拥有企业微信应用？直接参考下节 **【配置企业应用】**_
 
 [Server 酱](https://sct.ftqq.com) 是一款从服务器、路由器等设备上推消息到手机的工具。
 
-1. 打开 Server 酱 [SendKey](https://sct.ftqq.com/sendkey) 页面，获取 `SendKey`
-2. 进入项目 "Settings" → "Secrets" 配置页，点击 `New repository secret`
-   - 新建 `SC_SEND_KEY` 项，填入 `SendKey`
+<details>
+<summary><em>获取 SendKey</em></summary>
+
+打开 Server 酱 [SendKey](https://sct.ftqq.com/sendkey) 页面，获取 `SendKey`
+
+</details>
+
+##### 全局通知配置
+
+进入项目 "Settings" → "Secrets" 配置页，点击 `New repository secret`
+
+- 新建 `SC_SEND_KEY` 项，填入 `SendKey`
 
 #### 1.3.7 pushplus（仅支持全局通知）
 
 [pushplus](https://www.pushplus.plus/) 推送加。是一个集成了微信、企业微信、钉钉、短信、邮件等渠道的信息推送平台。
 
-1. 进入 [pushplus 官网](https://www.pushplus.plus/push1.html)，登录后获取 pushplus `token`
-2. 进入项目 "Settings" → "Secrets" 配置页，点击 `New repository secret`
-   - 新建 `PUSHPLUS_TOKEN` 项，填入 `token`
+<details>
+<summary><em>获取 pushplus token</em></summary>
+
+进入 [pushplus 官网](https://www.pushplus.plus/push1.html)，登录后获取 pushplus `token`
+
+</details>
+
+##### 全局通知配置
+
+进入项目 "Settings" → "Secrets" 配置页，点击 `New repository secret`
+
+- 新建 `PUSHPLUS_TOKEN` 项，填入 `token`
+
+#### 1.3.8 Qmsg 酱
+
+[Qmsg 酱](https://qmsg.zendee.cn/) 是一个 QQ 消息推送平台。
+
+<details>
+<summary><em>获取 qmsg key</em></summary>
+  
+进入 Qmsg 酱[管理台](https://qmsg.zendee.cn/me.html)。登录后获取推送 `key`
+</details>
+
+##### 配置 qmsg key
+
+进入项目 "Settings" → "Secrets" 配置页，点击 `New repository secret`
+
+- 新建 `QMSG_KEY` 项，填入 `key`
+
+##### 用户通知配置
+
+`TOKEN` Secret 配置为 JSON 格式，添加 `qq` 属性，填入用户 qq 号。
+
+##### 全局通知配置
+
+进入项目 "Settings" → "Secrets" 配置页，点击 `New repository secret`
+
+- 新建 `QMSG_ADMIN` 项，填入 qq 号
 
 ## 二、🔄 脚本更新
 
