@@ -10,17 +10,27 @@ const notifier = new Notifier({
   telegram: {
     botToken: process.env.TG_BOT_TOKEN,
     userId: process.env.TG_USER_ID
+  },
+  qmsg: {
+    token: process.env.QMSG_KEY,
+    qq: process.env.QMSG_ADMIN
   }
 })
 
 async function main() {
   console.log('\n## 消息推送 ##')
 
+  const date = new Date()
+
   try {
     const res = await Promise.all(
       notifier.notify(
         '推送测试',
-        `这是推送测试的消息:\n- 11111\n- 22222\n- ${Date.now()}`
+        `这是推送测试的消息:\n- 11111\n- 22222\n- ${[
+          date.getHours(),
+          date.getMinutes(),
+          date.getSeconds()
+        ].join(':')}`
       )
     )
 
