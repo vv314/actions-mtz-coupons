@@ -17,27 +17,16 @@ const notifier = new Notifier({
   }
 })
 
-async function main() {
-  console.log('\n## 消息推送 ##')
+const date = new Date()
+const title = '推送测试'
+const content = `这是推送测试的消息:\n- 11111\n- 22222\n- ${[
+  date.getHours(),
+  date.getMinutes(),
+  date.getSeconds()
+].join(':')}`
 
-  const date = new Date()
+test('统一推送测试', async () => {
+  const res = await Promise.all(notifier.notify(title, content))
 
-  try {
-    const res = await Promise.all(
-      notifier.notify(
-        '推送测试',
-        `这是推送测试的消息:\n- 11111\n- 22222\n- ${[
-          date.getHours(),
-          date.getMinutes(),
-          date.getSeconds()
-        ].join(':')}`
-      )
-    )
-
-    console.log('result', res)
-  } catch (e) {
-    console.log('执行失败', e)
-  }
-}
-
-module.exports = main
+  expect(res.filter((e) => e.success).length).toBe(res.length)
+})

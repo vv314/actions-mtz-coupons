@@ -1,5 +1,5 @@
 process.on('unhandledRejection', (e) => {
-  console.log('程序执行异常', e)
+  console.log('程序执行异常:', e)
 })
 
 const pLimit = require('p-limit')
@@ -39,7 +39,7 @@ console.log(`
 
  Ver. ${version}
 
- Github @vv314`)
+ Github @vv314\n`)
 
 function stringifyCoupons(coupons) {
   return coupons

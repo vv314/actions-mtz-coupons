@@ -2,14 +2,17 @@
   "name": "actions-mtz-coupons",
   "version": "1.7.0",
   "private": true,
-  "keywords": [],
+  "keywords": [
+    "外卖",
+    "红包"
+  ],
   "description": "外卖神券天天领",
   "author": "Vincent <vv314@foxmail.com>",
   "main": "index.js",
   "scripts": {
     "start": "node index",
-    "test": "node test/index",
     "start:local": "node index.local",
+    "test": "jest",
     "sync": "node ./sync-upstream"
   },
   "dependencies": {
@@ -20,7 +23,8 @@
     "tough-cookie": "^4.0.0"
   },
   "devDependencies": {
-    "dotenv": "^8.2.0"
+    "dotenv": "^8.2.0",
+    "jest": "^27.4.5"
   },
   "repository": {
     "type": "git",

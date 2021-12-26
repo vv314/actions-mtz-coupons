@@ -1,4 +1,3 @@
-const parseToken = require('../lib/parse-token')
 const fetch = require('../lib/fetch')
 const getPayload = require('../lib/payload')
 
@@ -23,17 +22,27 @@ async function getTemplateData() {
   }
 }
 
-async function main() {
-  console.log('\n## 解析 payload ##')
+test('获取模板数据', () => {
+  return getTemplateData().then((res) =>
+    expect(res).toMatchObject({
+      gundamId: expect.anything(),
+      appJs: expect.stringMatching(/app.js$/)
+    })
+  )
+})
 
-  try {
-    const { gundamId, appJs } = await getTemplateData()
-    const payload = await getPayload(gundamId, appJs)
+test('获取 payload', async () => {
+  const { gundamId, appJs } = await getTemplateData()
 
-    console.log('执行完毕', payload)
-  } catch (e) {
-    console.log('执行失败', e)
-  }
-}
-
-module.exports = main
+  return getPayload(gundamId, appJs).then((res) =>
+    expect(res).toMatchObject({
+      actualLatitude: '',
+      actualLongitude: '',
+      couponConfigIdOrderCommaString: expect.any(String),
+      defaultGrabKey: expect.any(String),
+      grabKey: expect.any(String),
+      gundamId: gundamId,
+      needTj: expect.any(Boolean)
+    })
+  )
+})
