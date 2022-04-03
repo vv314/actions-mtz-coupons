@@ -1,3 +1,45 @@
+## 1.8.0 (2022-04-03)
+
+#### :rocket: New Feature
+
+- 支持 QQ 通知（Qmsg 酱）
+
+#### :bug: Bug Fix
+
+- 修复脚本失败问题
+
+## 1.7.0 (2021-12-20)
+
+#### :rocket: New Feature
+
+- 使用动态载荷
+- 支持钉钉推送
+- 支持 pushplus 推送
+- 支持格式化的 JSON 配置 [@Code2qing, #11]
+
+#### :bug: Bug Fix
+
+- 输出接口错误信息
+
+#### :house: Internal
+
+- 提升稳定性
+
+## 1.6.0 (2021-11-23)
+
+#### :rocket: New Feature
+
+- 支持飞书 bot 推送
+- 推送信息展示用户昵称
+
+#### :bug: Bug Fix
+
+- 升级领券接口
+
+#### :house: Internal
+
+- 提升稳定性
+
 ## 1.5.0 (2021-04-23)
 
 #### :rocket: New Feature
