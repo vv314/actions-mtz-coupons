@@ -34,5 +34,8 @@
   "bugs": {
     "url": "https://github.com/vv314/actions-mtwm-coupons/issues"
   },
-  "homepage": "https://github.com/vv314/actions-mtwm-coupons#readme"
+  "homepage": "https://github.com/vv314/actions-mtwm-coupons#readme",
+  "engines": {
+    "node": ">=16.0.0"
+  }
 }

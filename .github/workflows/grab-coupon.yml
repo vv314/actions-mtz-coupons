@@ -4,6 +4,7 @@ name: 领红包
 on:
   # 手动触发
   workflow_dispatch:
+  # 定时任务
   schedule:
     # https://crontab.guru/
     # UTC 时间，中国时区应减 8
@@ -22,13 +23,17 @@ jobs:
 
     steps:
       - name: Checkout codes
-        uses: actions/checkout@v2
-        with: { ref: main }
-      - name: Use Node.js
-        uses: actions/setup-node@v2
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          node-version: '14'
-      - run: yarn install
+          node-version-file: 'package.json'
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
       - name: Run app
         run: yarn start
         env:
