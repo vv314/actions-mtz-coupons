@@ -1,4 +1,5 @@
 # http://editorconfig.org
+
 root = true
 
 [*]
@@ -12,3 +13,11 @@ trim_trailing_whitespace = true
 [*.md]
 insert_final_newline = false
 trim_trailing_whitespace = false
+
+[*.yml]
+indent_style = space
+
+[package.json]
+indent_style = space
+indent_size = 2
+insert_final_newline = false
