@@ -1,4 +1,4 @@
-const Notifier = require('../lib/Notifier')
+import Notifier from '../lib/Notifier'
 
 const notifier = new Notifier({
   barkKey: process.env.BARK_KEY,

@@ -2,12 +2,14 @@ process.on('unhandledRejection', (e) => {
   console.log('程序执行异常:', e)
 })
 
-const pLimit = require('p-limit')
-const Notifier = require('./lib/notifier')
-const { version } = require('./package.json')
-const parseToken = require('./lib/parse-token')
-const updateNotifier = require('./lib/update-notifier')
-const { getCoupons } = require('./lib/coupons')
+import pLimit from 'p-limit'
+import Notifier from './lib/notifier/index.js'
+import parseToken from './lib/parse-token.js'
+import updateNotifier from './lib/update-notifier.js'
+import { getCoupons } from './lib/coupons/index.js'
+import { readPkgJson } from './lib/util.js'
+
+const { version: currentVersion } = readPkgJson()
 
 const TOKEN = process.env.TOKEN
 const notifier = new Notifier({
@@ -37,7 +39,7 @@ console.log(`
  外卖神券天天领
 ────────────────────────
 
- Ver. ${version}
+ Ver. ${currentVersion}
 
  Github @vv314\n`)
 

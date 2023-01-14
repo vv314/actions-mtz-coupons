@@ -1,4 +1,4 @@
-const parseToken = require('../lib/parse-token')
+import parseToken from '../lib/parse-token'
 
 test('未配置', () => {
   expect(() => parseToken()).toThrow('请配置 TOKEN')

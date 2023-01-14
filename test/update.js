@@ -1,4 +1,4 @@
-const updateNotifier = require('../lib/update-notifier')
+import updateNotifier from '../lib/update-notifier'
 
 test('检查更新', () => {
   const timeout = 5000
