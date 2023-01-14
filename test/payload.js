@@ -1,5 +1,5 @@
-const fetch = require('../lib/fetch')
-const getPayload = require('../lib/payload')
+import fetch from '../lib/fetch'
+import getPayload from '../lib/payload'
 
 const GUNDAM_ID = '2KAWnD'
 

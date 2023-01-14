@@ -1,7 +1,7 @@
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 
-const parseToken = require('../lib/parse-token')
-const { getCoupons, ECODE } = require('../lib/coupons')
+import parseToken from '../lib/parse-token'
+import { getCoupons, ECODE } from '../lib/coupons'
 
 test('领取优惠券', async () => {
   const tokens = parseToken(process.env.TOKEN)
