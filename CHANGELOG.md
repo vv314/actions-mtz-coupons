@@ -1,3 +1,15 @@
+## 1.8.1 (2023-01-15)
+
+#### :bug: Bug Fix
+
+- 修复 payload 获取失败问题
+- 修复多账号模式
+
+#### :house: Internal
+
+- 迁移 ECMAScript module
+- 稳定性提升
+
 ## 1.8.0 (2022-04-03)
 
 #### :rocket: New Feature
