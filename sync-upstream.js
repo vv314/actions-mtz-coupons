@@ -1,4 +1,4 @@
-const { spawn } = require('child_process')
+import { spawn } from 'node:child_process'
 
 function gitExec(opt) {
   const pull = spawn('git', opt.split(' '))
