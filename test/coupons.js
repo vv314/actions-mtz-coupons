@@ -13,7 +13,7 @@ test('领取优惠券', async () => {
 })
 
 test('token 错误', async () => {
-  const res = await getCoupons('aaa', {
+  const res = await getCoupons('invalid token', {
     // proxy: 'http://127.0.0.1:8887'
   })
 
