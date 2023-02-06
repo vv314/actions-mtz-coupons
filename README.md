@@ -452,3 +452,7 @@ npm run test
 ## 五、📜 声明
 
 本项目仅供学习与研究之用，请勿用于商业或非法用途。原作者不能完全保证项目的合法性，准确性和安全性，因使用不当造成的任何损失与损害，与原作者无关。请仔细阅读此声明，一旦您使用并复制了本项目，则视为已接受此声明。
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=vv314/actions-mtz-coupons&type=Date)](https://star-history.com/#vv314/actions-mtz-coupons&Date)
