@@ -36,11 +36,10 @@ test('获取 payload', async () => {
 
   return getPayload(gundamId, appJs).then((res) =>
     expect(res).toMatchObject({
-      actualLatitude: '',
-      actualLongitude: '',
+      actualLatitude: 0,
+      actualLongitude: 0,
       couponConfigIdOrderCommaString: expect.any(String),
-      defaultGrabKey: expect.any(String),
-      grabKey: expect.any(String),
+      couponAllConfigIdOrderString: expect.any(String),
       gundamId: gundamId,
       needTj: expect.any(Boolean)
     })
