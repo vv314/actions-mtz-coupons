@@ -2,7 +2,6 @@
   "name": "actions-mtz-coupons",
   "description": "外卖神券天天领",
   "version": "1.9.0",
-  "packageManager": "yarn",
   "keywords": [
     "外卖",
     "红包"
