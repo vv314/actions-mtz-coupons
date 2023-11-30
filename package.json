@@ -16,7 +16,6 @@
     "test": "yarn node --experimental-vm-modules $(yarn bin jest)",
     "sync": "node ./sync-upstream"
   },
-  "packageManager": "^yarn@1.22.19",
   "dependencies": {
     "https-proxy-agent": "^5.0.1",
     "node-fetch": "^3.3.0",
