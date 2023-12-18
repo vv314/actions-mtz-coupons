@@ -12,16 +12,17 @@ const ECODE = {
 }
 
 async function fetch(url, opts = {}) {
-  const urlObj = new URL(url)
   const cookieJar = opts.cookie
-  const existCookie = cookieJar?.getCookieStringSync(url)
+  const guard = opts.guard
+  const existCookie = cookieJar?.getCookieStringSync?.(url)
   const optCookie = opts.headers?.cookie || ''
   const defHeader = {
     // 重要：需设置 UA
     'User-Agent':
-      'Mozilla/5.0 (iPhone; CPU iPhone OS 15_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.1 Mobile/15E148 Safari/604.1',
+      'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1',
     Connection: 'keep-alive'
   }
+  let urlObj = new URL(url)
   let res
 
   if (opts.timeout) {
@@ -48,14 +49,22 @@ async function fetch(url, opts = {}) {
   delete opts.timeout
   delete opts.params
 
+  if (guard) {
+    urlObj = await guard.sign({
+      url: urlObj,
+      method: opts.method,
+      body: opts.body
+    })
+  }
+
   try {
     res = await nodeFetch(urlObj, opts)
   } catch (e) {
     if (opts.signal?.aborted) {
-      throw { code: ECODE.TIMEOUT, url: url, msg: e }
+      throw { code: ECODE.TIMEOUT, req: urlObj, msg: e }
     }
 
-    throw { code: ECODE.FETCH, url: url, msg: res.statusText }
+    throw { code: ECODE.FETCH, req: urlObj, msg: res.statusText }
   }
 
   const setCookies = res.headers.raw()['set-cookie']
@@ -74,12 +83,11 @@ async function doGet(url, opts = {}) {
     headers: opts.headers,
     cookie: opts.cookie,
     params: opts.params,
-    timeout: opts.timeout ?? 10000
+    timeout: opts.timeout ?? 10000,
+    guard: opts.guard
   })
 
   if (res.ok) return res.json()
-
-  console.log('res', res)
 
   throw { code: ECODE.FETCH, url: url, msg: res.statusText }
 }
@@ -106,7 +114,8 @@ async function doPost(url, data, opts = {}) {
     headers: Object.assign({}, opts.headers, {
       'Content-Type': cType
     }),
-    timeout: opts.timeout ?? 10000
+    timeout: opts.timeout ?? 10000,
+    guard: opts.guard
   })
 
   if (res.ok) return res.json()

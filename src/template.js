@@ -1,12 +1,19 @@
 import fetch from './fetch.js'
 
+function extractAppJsUrl(text) {
+  const regex = /https:\/\/[^"]*\/app[^"]*\.js/
+  const match = text.match(regex)
+
+  return match ? match[0] : null
+}
+
 async function getTemplateData(cookie, gundamId) {
   const text = await fetch(
     `https://market.waimai.meituan.com/api/template/get?env=current&el_biz=waimai&el_page=gundam.loader&gundam_id=${gundamId}`,
     { cookie }
   ).then((rep) => rep.text())
   const matchGlobal = text.match(/globalData: ({.+})/)
-  const matchAppJs = text.match(/https:\/\/[./_-\w]+app.*\.js(?=")/g)
+  const appJs = extractAppJsUrl(text)
 
   try {
     const globalData = JSON.parse(matchGlobal[1])
@@ -14,7 +21,7 @@ async function getTemplateData(cookie, gundamId) {
     return {
       gdId: globalData.gdId,
       actName: globalData.pageInfo.title,
-      appJs: matchAppJs[0],
+      appJs: appJs,
       pageId: globalData.pageId
     }
   } catch (e) {
@@ -23,7 +30,7 @@ async function getTemplateData(cookie, gundamId) {
 }
 
 // 通过接口获取真实的渲染列表
-async function getRenderList(gdId) {
+async function getRenderList(gdId, guard) {
   let data
 
   try {
@@ -35,7 +42,8 @@ async function getRenderList(gdId) {
           el_page: 'gundam.loader',
           gdId: gdId,
           tenant: 'gundam'
-        }
+        },
+        guard
       }
     )
 

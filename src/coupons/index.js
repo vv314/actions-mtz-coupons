@@ -1,60 +1,30 @@
-import fetch, { createCookieJar } from '../fetch.js'
+import fetch from '../fetch.js'
+import ShadowGuard from '../shadow/index.js'
+import { createMTCookie, getUserInfo } from '../user.js'
 import gundamGrab from './gundamGrab.js'
 import DCwpqO from './DCwpqO.js'
-import { couponId, ECODE, HOST } from './const.js'
+import { couponId, ECODE } from './const.js'
 
-function createMTCookie(token) {
-  const cookieJar = createCookieJar(token)
-  const domain = 'Domain=.meituan.com'
-  const path = 'Path=/'
-  const http = 'HttpOnly'
-  const expire = 'Max-Age=3600'
-  const content = token.startsWith('token=') ? token : `token=${token}`
-  const cookieStr = [content, domain, path, http, expire].join(';')
-
-  cookieJar.setCookie(cookieStr, HOST)
-
-  return cookieJar
-}
-
-async function getMTUerId() {
-  const rep = await fetch('https://h5.waimai.meituan.com/waimai/mindex/home')
-
-  const repCookie = rep.headers.get('set-cookie') || ''
-  const matchArr = repCookie.match(/userId=(\w+)/) || []
-
-  return matchArr[1] || ''
-}
-
-async function getUserInfo(cookie) {
-  const res = await fetch.post(`${HOST}/gundam/gundamLogin`, null, {
-    cookie: cookie
-  })
-
-  if (res.code == 0) return res.data
-
-  if (res.code == 3) {
-    throw { code: ECODE.AUTH, api: 'gundamLogin', msg: res.msg || res.message }
-  }
-
-  throw { code: ECODE.API, api: 'gundamLogin', msg: res.msg || res.message }
-}
-
-async function runTask(cookie) {
+async function runTask(cookie, guard) {
   try {
     // 优先检测登录状态
-    const userInfo = await getUserInfo(cookie)
+    const userInfo = await getUserInfo(cookie, guard)
     const grabResult = []
 
     // 主活动，失败时向外抛出异常
-    const mainResult = await gundamGrab.grabCoupon(cookie, couponId.main.gid)
+    const mainResult = await gundamGrab.grabCoupon(
+      cookie,
+      couponId.main.gid,
+      guard
+    )
 
     grabResult.push(...mainResult)
 
     try {
       const qualityShopResult = await gundamGrab.grabCoupon(
         cookie,
-        couponId.shop.gid
+        couponId.shop.gid,
+        guard
       )
 
       grabResult.push(...qualityShopResult)
@@ -122,14 +92,20 @@ async function getCoupons(token, { maxRetry = 0, httpProxy }) {
     }
   }
 
-  const cookieJar = createMTCookie(token)
-
+  // 优先设置代理
   if (httpProxy) {
     fetch.setProxyAgent(httpProxy)
   }
 
+  const cookieJar = createMTCookie(token)
+
+  // 在 main 之外获取 guard，避免重复初始化
+  const guard = await new ShadowGuard().init(
+    gundamGrab.getActUrl(couponId.main.gid)
+  )
+
   async function main(retryTimes = 0) {
-    const result = await runTask(cookieJar)
+    const result = await runTask(cookieJar, guard)
     const needRetry = [fetch.ECODE.NETWOEK, fetch.ECODE.API].includes(
       result.code
     )

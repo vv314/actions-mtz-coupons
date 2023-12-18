@@ -1,14 +1,31 @@
-![外卖神券天天领](https://p0.meituan.net/dptakeaway/11b0b51183806e09f55a530fc0dd0409328863.jpg)
+<p align="center">
+  <a href="https://github.com/vv314/actions-mtz-coupons" rel="noopener noreferrer">
+    <img width="260" src="https://github-production-user-asset-6210df.s3.amazonaws.com/7637375/291613192-73636f3d-7271-4802-b0fe-328c479c1e35.png">
+  </a>
+</p>
+<br/>
+<p align="center">
+  <a href="https://github.com/vv314/actions-mtz-coupons"><img src="https://img.shields.io/github/actions/workflow/status/vv314/actions-mtz-coupons/grab-coupon.yml?branch=main&label=%E9%A2%86%E7%BA%A2%E5%8C%85&logo=github%20actions&style=flat" alt="workflow"></a>
+  <a href="https://github.com/vv314/actions-mtz-coupons/releases"><img src="https://img.shields.io/github/v/release/vv314/actions-mtz-coupons" alt="release"></a>
+  <a href="https://github.com/vv314/actions-mtz-coupons"><img src="https://img.shields.io/github/last-commit/vv314/actions-mtz-coupons/main?label=update" alt="update"></a>
+  <a href="https://github.com/vv314/actions-mtz-coupons/fork"><img src="https://img.shields.io/github/forks/vv314/actions-mtz-coupons" alt="forks"></a>
+</p>
+<br/>
 
-# 🧧【美团】外卖神券天天领
+# 🧧 外卖神券天天领
 
-![workflow](https://img.shields.io/github/actions/workflow/status/vv314/actions-mtz-coupons/grab-coupon.yml?branch=main&label=%E9%A2%86%E7%BA%A2%E5%8C%85&logo=github%20actions&style=flat) ![release](https://img.shields.io/github/v/release/vv314/actions-mtz-coupons) ![update](https://img.shields.io/github/last-commit/vv314/actions-mtz-coupons/main?label=update) ![fork](https://img.shields.io/github/forks/vv314/actions-mtz-coupons)
+<p>外卖神券天天领，超值红包享不停；以自动化的方式领取外卖红包。</p><br/>
 
-外卖神券天天领，超值红包享不停；以自动化的方式领取美团红包。
-
-> ★ 专注领劵，不搞杂七杂八<br/>★ 多帐号支持，全村都能配上<br/>★ 并行化任务，数管齐下更有效率<br/>★ 异常重试，一次不行再来一次<br/>★ 多路消息通知，总有一个到达你<br/>★ Github Actions 部署，从未如此简单
+> [!TIP]
+> ★ 专注领劵，不搞杂七杂八<br/>★ 多帐号支持，全村都能配上<br/>★ 并行化任务，数管齐下更有效率<br/>★ 异常重试，一次不行再来一次<br/>★ 多路消息通知，总有一个到达你<br/>★ Github Actions 部署，操作如此简单
+> <br/>
 
 ## 一、📕 使用手册
+
+#### 环境要求
+
+- [Node.js](https://nodejs.org/) v18.0 及以上
+- [pnpm](https://pnpm.io/) v8.0 及以上
 
 #### 获取账号 TOKEN
 
@@ -392,7 +409,7 @@ Telegram 搜索 [@userinfobot](https://t.me/useridinfobot)，点击 `/start`，�
 
 - 新建 `QMSG_ADMIN` 项，填入 qq 号
 
-## 二、🔄 脚本更新
+## 二、⬇️ 脚本更新
 
 此项目将长期维护，为了确保副本能够及时享受到上游更新，请定期执行同步操作。
 
@@ -433,7 +450,7 @@ QYWX_SEND_CONF={"agentId": "1000002", "corpId": "wwxxxe9ddxxxc50xxx", "corpSecre
 SEC69162axxxf59sdss23|https://oapi.dingtalk.com/robot/send?access_token=09bsdfa66xxxa608bsds
 ```
 
-### 3.1 本地调试
+### 3.1 本地运行
 
 ```bash
 npm run start:local
@@ -445,7 +462,7 @@ npm run start:local
 npm run test
 ```
 
-## 四、参与贡献
+## 四、🏗 参与贡献
 
 请参阅：[CONTRIBUTING.md](https://github.com/vv314/actions-mtz-coupons/blob/main/CONTRIBUTING.md)
 

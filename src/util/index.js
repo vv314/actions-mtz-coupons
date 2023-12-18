@@ -3,7 +3,7 @@ import { createRequire } from 'node:module'
 const require = createRequire(import.meta.url)
 
 function readPkgJson() {
-  return require('../package.json')
+  return require('../../package.json')
 }
 
 // 对手机号脱敏处理

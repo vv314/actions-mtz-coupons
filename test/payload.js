@@ -1,47 +1,45 @@
-import fetch from '../lib/fetch'
-import getPayload from '../lib/payload'
+import { getTemplateData, getRenderList } from '../src/template.js'
+import getPayload from '../src/payload.js'
+import ShadowGuard from '../src/shadow/index.js'
+import grab from '../src/coupons/gundamGrab.js'
+import { couponId } from '../src/coupons/const.js'
 
-const GUNDAM_ID = '2KAWnD'
+const guard = new ShadowGuard()
 
-async function getTemplateData() {
-  const text = await fetch(
-    `https://market.waimai.meituan.com/api/template/get?env=current&el_biz=waimai&el_page=gundam.loader&gundam_id=${GUNDAM_ID}`
-  ).then((rep) => rep.text())
-  const matchGlobal = text.match(/globalData: ({.+})/)
-  const matchAppJs = text.match(/https:\/\/[./_-\w]+app\.js(?=")/g)
+beforeAll(() => guard.init(grab.getActUrl(couponId.main.gid)))
 
-  try {
-    const globalData = JSON.parse(matchGlobal[1])
+test('Test getTemplateData', async () => {
+  const res = await getTemplateData(null, couponId.main.gid)
 
-    return {
-      gundamId: globalData.gdId,
-      appJs: matchAppJs[0]
-    }
-  } catch (e) {
-    throw new Error(`活动配置数据获取失败: ${e}`)
-  }
-}
-
-test('获取模板数据', () => {
-  return getTemplateData().then((res) =>
-    expect(res).toMatchObject({
-      gundamId: expect.anything(),
-      appJs: expect.stringMatching(/app.js$/)
-    })
-  )
+  return expect(res).toMatchObject({
+    pageId: expect.any(Number),
+    gdId: expect.any(Number),
+    actName: expect.any(String),
+    appJs: expect.stringMatching(/app[^"]*\.js/)
+  })
 })
 
-test('获取 payload', async () => {
-  const { gundamId, appJs } = await getTemplateData()
+test('Test getRenderList', async () => {
+  const renderList = await getRenderList(couponId.main.gid, guard)
 
-  return getPayload(gundamId, appJs).then((res) =>
-    expect(res).toMatchObject({
-      actualLatitude: 0,
-      actualLongitude: 0,
-      couponConfigIdOrderCommaString: expect.any(String),
-      couponAllConfigIdOrderString: expect.any(String),
-      gundamId: gundamId,
-      needTj: expect.any(Boolean)
-    })
-  )
+  return expect(renderList).toEqual(expect.any(Array))
+})
+
+test('Test getPayload', async () => {
+  const { gdId, appJs } = await getTemplateData(null, couponId.main.gid)
+  const payload = await getPayload(gdId, appJs, guard)
+
+  return expect(payload).toMatchObject({
+    actualLatitude: 0,
+    actualLongitude: 0,
+    app: -1,
+    platform: 3,
+    couponConfigIdOrderCommaString: expect.any(String),
+    couponAllConfigIdOrderString: expect.any(String),
+    gundamId: gdId,
+    needTj: expect.any(Boolean),
+    instanceId: expect.any(String),
+    h5Fingerprint: '',
+    rubikCouponKey: expect.any(String)
+  })
 })

@@ -20,16 +20,17 @@ function formatCoupons(coupons, actName) {
   }))
 }
 
-async function grabCoupon(cookie, gundamId) {
+async function grabCoupon(cookie, gundamId, guard) {
   const actUrl = getActUrl(gundamId)
   const tmplData = await getTemplateData(cookie, gundamId)
-  const payload = await getPayload(tmplData.gdId, tmplData.appJs)
+  const payload = await getPayload(tmplData.gdId, tmplData.appJs, guard)
   const res = await fetch.post(`${HOST}/gundam/gundamGrabV4`, payload, {
     cookie,
     headers: {
       Origin: actUrl.origin,
       Referer: actUrl.origin + '/'
-    }
+    },
+    guard
   })
 
   if (res.code == 0) {
@@ -50,7 +51,7 @@ async function grabCoupon(cookie, gundamId) {
 }
 
 export default {
-  grabCoupon: grabCoupon,
-  getActUrl: getActUrl
+  grabCoupon,
+  getActUrl
 }
 export { getPayload }

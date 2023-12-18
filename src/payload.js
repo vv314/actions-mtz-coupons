@@ -41,8 +41,8 @@ function resolveMetadata(renderList, jsText) {
   return null
 }
 
-async function getGundamPayload(gundamId, appJs) {
-  const renderList = await getRenderList(gundamId)
+async function getGundamPayload(gundamId, appJs, guard) {
+  const renderList = await getRenderList(gundamId, guard)
   const jsText = await fetch(appJs).then((res) => res.text())
   const data = resolveMetadata(renderList, jsText)
 

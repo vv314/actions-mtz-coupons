@@ -1,6 +1,6 @@
 import semver from 'semver'
+import { readPkgJson } from './util/index.js'
 import fetch from './fetch.js'
-import { readPkgJson } from './util.js'
 
 const { version: currentVersion } = readPkgJson()
 

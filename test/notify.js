@@ -1,4 +1,4 @@
-import Notifier from '../lib/Notifier'
+import Notifier from '../src/notifier/index.js'
 
 const notifier = new Notifier({
   barkKey: process.env.BARK_KEY,
@@ -25,7 +25,7 @@ const content = `这是推送测试的消息:\n- 11111\n- 22222\n- ${[
   date.getSeconds()
 ].join(':')}`
 
-test('统一推送测试', async () => {
+test('Test Notifier', async () => {
   const res = await Promise.all(notifier.notify(title, content))
 
   expect(res.filter((e) => e.success).length).toBe(res.length)

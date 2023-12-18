@@ -1,10 +1,18 @@
-import parseToken from '../lib/parse-token'
+import tough from 'tough-cookie'
+import ShadowGuard from '../src/shadow/index.js'
+import grab from '../src/coupons/gundamGrab.js'
+import { createMTCookie, getUserInfo, parseToken } from '../src/user.js'
+import { couponId } from '../src/coupons/const.js'
 
-test('未配置', () => {
+const guard = new ShadowGuard()
+
+beforeAll(() => guard.init(grab.getActUrl(couponId.main.gid)))
+
+test('Test Token Undefined', () => {
   expect(() => parseToken()).toThrow('请配置 TOKEN')
 })
 
-test('字符串格式', () => {
+test('Test String Token', () => {
   expect(parseToken('aaa')).toContainEqual({
     token: 'aaa',
     alias: '',
@@ -17,20 +25,7 @@ test('字符串格式', () => {
   })
 })
 
-test('JSON 格式', () => {
-  expect(parseToken('{"token": "aaa"}')).toContainEqual({
-    token: 'aaa',
-    alias: '',
-    index: 1,
-    tgUid: '',
-    qywxUid: '',
-    barkKey: '',
-    larkWebhook: '',
-    qq: ''
-  })
-})
-
-test('格式化 JSON', () => {
+test('Test JSON Token', () => {
   const token = `
     {
       "token": "aaa"
@@ -49,7 +44,7 @@ test('格式化 JSON', () => {
   })
 })
 
-test('多账户配置', () => {
+test('Test Multiple Token', () => {
   expect(parseToken('["aaa", {"token": "bbb", "alias": "jeff"}]')).toEqual(
     expect.arrayContaining([
       {
@@ -76,10 +71,25 @@ test('多账户配置', () => {
   )
 })
 
-test('JSON 语法错误', () => {
+test('Test JSON Token Verification', () => {
   expect(() => parseToken('{token: "aaa"}')).toThrow('TOKEN 解析错误')
 })
 
-test('多账户 JSON 语法错误', () => {
+test('Test Multiple Token Verification', () => {
   expect(() => parseToken('["aaa", {token: "bbb"}]')).toThrow('TOKEN 解析错误')
+})
+
+test('Test Cookie', () => {
+  const tokens = parseToken(process.env.TOKEN)
+  const cookie = createMTCookie(tokens[0].token)
+
+  expect(cookie).toBeInstanceOf(tough.CookieJar)
+})
+
+test('Test Login', async () => {
+  const tokens = parseToken(process.env.TOKEN)
+  const cookie = createMTCookie(tokens[0].token)
+  const userInfo = await getUserInfo(cookie, guard)
+
+  expect(userInfo).toBeTruthy()
 })

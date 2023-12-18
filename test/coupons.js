@@ -1,9 +1,9 @@
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 
-import parseToken from '../lib/parse-token'
-import { getCoupons, ECODE } from '../lib/coupons'
+import { parseToken } from '../src/user.js'
+import { getCoupons, ECODE } from '../src/coupons/index.js'
 
-test('领取优惠券', async () => {
+test('Test Coupons', async () => {
   const tokens = parseToken(process.env.TOKEN)
   const res = await getCoupons(tokens[0].token, {
     // proxy: 'http://127.0.0.1:8887'
@@ -12,7 +12,7 @@ test('领取优惠券', async () => {
   expect(res.code).toBe(ECODE.SUCC)
 })
 
-test('token 错误', async () => {
+test('Test Token Error', async () => {
   const res = await getCoupons('invalid token', {
     // proxy: 'http://127.0.0.1:8887'
   })

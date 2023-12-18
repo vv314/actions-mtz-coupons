@@ -3,11 +3,11 @@ process.on('unhandledRejection', (e) => {
 })
 
 import pLimit from 'p-limit'
-import Notifier from './lib/notifier/index.js'
-import parseToken from './lib/parse-token.js'
-import updateNotifier from './lib/update-notifier.js'
-import { getCoupons } from './lib/coupons/index.js'
-import { readPkgJson } from './lib/util.js'
+import Notifier from './src/notifier/index.js'
+import { parseToken } from './src/user.js'
+import updateNotifier from './src/update-notifier.js'
+import { getCoupons } from './src/coupons/index.js'
+import { readPkgJson } from './src/util/index.js'
 
 const { version: currentVersion } = readPkgJson()
 
@@ -201,7 +201,6 @@ async function checkUpdate(timeout) {
 
 async function main() {
   const tokens = parseToken(TOKEN)
-
   const tasks = await runTaskQueue(tokens)
 
   const globalPushInfo = sendGlobalNotify(tasks)
