@@ -10,15 +10,18 @@
 
 ## 开发
 
+### 环境准备
+
 - 使用 [Node.js](https://nodejs.org/) 18+ 运行环境
 - 使用 [pnpm@8.x](https://pnpm.io/) 作为包管理工具
 - 使用 [ECMAScript](https://nodejs.org/api/esm.html#modules-ecmascript-modules) 模块规范
 - 推荐使用 [corepack](https://github.com/nodejs/corepack) 匹配包管理器版本
+- 在 `.env` 文件中写入配置（参考 [本地运行](./docs/本地运行.md)）
 
 ### 初始化安装
 
 ```sh
-npm run bootstrap
+pnpm bootstrap
 ```
 
 ## 测试
