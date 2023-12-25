@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://github.com/vv314/actions-mtz-coupons" rel="noopener noreferrer">
-    <img width="260" src="https://github-production-user-asset-6210df.s3.amazonaws.com/7637375/291613192-73636f3d-7271-4802-b0fe-328c479c1e35.png">
+    <img width="240" src="https://github-production-user-asset-6210df.s3.amazonaws.com/7637375/291613192-73636f3d-7271-4802-b0fe-328c479c1e35.png">
   </a>
 </p>
 <br/>
@@ -9,6 +9,7 @@
   <a href="https://github.com/vv314/actions-mtz-coupons/releases"><img src="https://img.shields.io/github/v/release/vv314/actions-mtz-coupons" alt="release"></a>
   <a href="https://github.com/vv314/actions-mtz-coupons"><img src="https://img.shields.io/github/last-commit/vv314/actions-mtz-coupons/main?label=update" alt="update"></a>
   <a href="https://github.com/vv314/actions-mtz-coupons/fork"><img src="https://img.shields.io/github/forks/vv314/actions-mtz-coupons" alt="forks"></a>
+  <a href="https://github.com/vv314/actions-mtz-coupons"><img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fvv314%2Factions-mtz-coupons&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com" alt="forks"></a>
 </p>
 <br/>
 
