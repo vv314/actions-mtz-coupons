@@ -49,13 +49,14 @@ function stringifyCoupons(coupons) {
     .join('\n')
 }
 
-function sendUserNotify(msg, account, userInfo) {
+function sendUserNotify({ status, message, account, userInfo }) {
   const result = []
   const userName = userInfo.nickName
+  const title = `${NOTIFY_TITLE}${status == 'success' ? '😋' : '😥'}`
 
   if (account.barkKey) {
     const qywxRes = notifier
-      .sendBark(NOTIFY_TITLE, msg, { key: account.barkKey })
+      .sendBark(title, message, { key: account.barkKey })
       .then((res) => `@${userName} ${res.msg}`)
 
     result.push(qywxRes)
@@ -63,7 +64,7 @@ function sendUserNotify(msg, account, userInfo) {
 
   if (account.qywxUid) {
     const qywxRes = notifier
-      .sendWorkWechat(NOTIFY_TITLE, msg, {
+      .sendWorkWechat(title, message, {
         uid: account.qywxUid
       })
       .then((res) => `@${userName} ${res.msg}`)
@@ -73,7 +74,7 @@ function sendUserNotify(msg, account, userInfo) {
 
   if (account.larkWebhook) {
     const larkRes = notifier
-      .sendLark(NOTIFY_TITLE, msg, {
+      .sendLark(title, message, {
         webhook: account.larkWebhook
       })
       .then((res) => `@${userName} ${res.msg}`)
@@ -83,7 +84,7 @@ function sendUserNotify(msg, account, userInfo) {
 
   if (account.dtWebhook) {
     const dtRes = notifier
-      .sendDingTalk(NOTIFY_TITLE, msg, {
+      .sendDingTalk(title, message, {
         webhook: account.dtWebhook
       })
       .then((res) => `@${userName} ${res.msg}`)
@@ -93,7 +94,7 @@ function sendUserNotify(msg, account, userInfo) {
 
   if (account.tgUid) {
     const tgRes = notifier
-      .sendTelegram(NOTIFY_TITLE, msg, { uid: account.tgUid })
+      .sendTelegram(title, message, { uid: account.tgUid })
       .then((res) => `@${userName} ${res.msg}`)
 
     result.push(tgRes)
@@ -101,7 +102,7 @@ function sendUserNotify(msg, account, userInfo) {
 
   if (account.qq) {
     const tgRes = notifier
-      .sendQmsg(NOTIFY_TITLE, msg, { qq: account.qq })
+      .sendQmsg(title, message, { qq: account.qq })
       .then((res) => `@${userName} ${res.msg}`)
 
     result.push(tgRes)
@@ -112,14 +113,23 @@ function sendUserNotify(msg, account, userInfo) {
 
 function sendGlobalNotify(tasks) {
   const message = tasks.map((t) => `账号 ${t.user}:\n${t.data}`).join('\n\n')
+  const errorTasks = tasks.filter((t) => t.status == 'error')
+  const allFailed = tasks.length > 1 && errorTasks.length === tasks.length
+  const title = `${NOTIFY_TITLE}${
+    allFailed
+      ? '😥'
+      : errorTasks.length
+      ? `[${tasks.length - errorTasks.length}/${tasks.length}]`
+      : '😋'
+  }`
 
   return notifier
-    .notify(NOTIFY_TITLE, message)
+    .notify(title, message)
     .map((p) => p.then((res) => `[全局通知] ${res.msg}`))
 }
 
-function parseAccountName(account, user = {}) {
-  return account.alias || user.nickName || `token${account.index}`
+function parseAccountName(account, userInfo = {}) {
+  return account.alias || userInfo.nickName || `token${account.index}`
 }
 
 async function doJob(account, progress) {
@@ -132,30 +142,34 @@ async function doJob(account, progress) {
 
   if (res.code != 0) {
     console.log(res.msg, res.error)
+
     res.retryTimes && console.log(`重试: ${res.retryTimes} 次`)
-    console.log('\n😦 领取失败')
+
+    console.log('\n😦 领取失败', `(v${currentVersion})`)
 
     return {
+      status: 'error',
       user: accountName,
       data: `领取失败: ${res.msg}`,
-      userPushInfo: []
+      pushQueue: []
     }
   }
 
-  const { coupons, user } = res.data
+  const { coupons, userInfo } = res.data
 
   console.log(...coupons)
-  console.log(`\n红包已放入账号：${user.nickName}`)
+  console.log(`\n红包已放入账号：${userInfo.nickName}`)
   console.log(`\n🎉 领取成功！`)
 
   const message = stringifyCoupons(coupons)
-  const userPushInfo = sendUserNotify(message, account, user)
+  const pushQueue = sendUserNotify({ message, account, userInfo })
 
   return {
-    userPushInfo,
-    data: message,
+    status: 'success',
     // 结合 userInfo 重新解析 userName
-    user: parseAccountName(account, user)
+    user: parseAccountName(account, userInfo),
+    data: message,
+    pushQueue
   }
 }
 
@@ -173,15 +187,15 @@ async function runTaskQueue(tokenList) {
   )
 }
 
-async function printNotifyResult(pushInfo) {
-  if (pushInfo.length) {
+async function printNotifyResult(pushQueue) {
+  if (pushQueue.length) {
     console.log(`\n────────── 推送通知 ──────────\n`)
 
     // 异步打印结果
-    pushInfo.forEach((p) => p.then((res) => console.log(res)))
+    pushQueue.forEach((p) => p.then((res) => console.log(res)))
   }
 
-  return Promise.all(pushInfo)
+  return Promise.all(pushQueue)
 }
 
 async function checkUpdate(timeout) {
@@ -203,11 +217,11 @@ async function main() {
   const tokens = parseToken(TOKEN)
   const tasks = await runTaskQueue(tokens)
 
-  const globalPushInfo = sendGlobalNotify(tasks)
-  const userPushInfo = tasks.map((info) => info.userPushInfo).flat()
+  const globalPushQueue = sendGlobalNotify(tasks)
+  const userPushQueue = tasks.map((res) => res.pushQueue).flat()
 
   // 打印通知结果，用户通知优先
-  await printNotifyResult(userPushInfo.concat(globalPushInfo))
+  await printNotifyResult(userPushQueue.concat(globalPushQueue))
 
   checkUpdate(CHECK_UPDATE_TIMEOUT)
 }

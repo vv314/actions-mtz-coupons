@@ -44,7 +44,7 @@ async function runTask(cookie, guard) {
     return {
       code: ECODE.SUCC,
       data: {
-        user: userInfo,
+        userInfo,
         coupons: grabResult
       },
       msg: '成功'
