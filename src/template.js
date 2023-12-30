@@ -30,7 +30,7 @@ async function getTemplateData(cookie, gundamId) {
 }
 
 // 通过接口获取真实的渲染列表
-async function getRenderList(gdId, guard) {
+async function getRenderList(gdNumId, guard) {
   let data
 
   try {
@@ -40,7 +40,7 @@ async function getRenderList(gdId, guard) {
         params: {
           el_biz: 'waimai',
           el_page: 'gundam.loader',
-          gdId: gdId,
+          gdId: gdNumId,
           tenant: 'gundam'
         },
         guard
@@ -52,7 +52,11 @@ async function getRenderList(gdId, guard) {
     throw new Error('renderinfo 接口调用失败:' + e.message)
   }
 
-  return Object.keys(data).filter((k) => data[k].render)
+  const renderList = Object.entries(data)
+    .filter(([_, v]) => v.render)
+    .map(([k]) => k)
+
+  return renderList
 }
 
 export { getTemplateData, getRenderList }

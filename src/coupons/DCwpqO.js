@@ -163,7 +163,7 @@ async function grabCoupon(cookie) {
 }
 
 export default {
-  grabCoupon: grabCoupon,
-  getActUrl: getActUrl
+  grabCoupon,
+  getActUrl
 }
 export { getParams }

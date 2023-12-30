@@ -29,7 +29,7 @@ const notifier = new Notifier({
   }
 })
 
-const NOTIFY_TITLE = '外卖神券天天领😋'
+const NOTIFY_TITLE = '外卖神券天天领'
 const MAX_RETRY_COUNT = 2
 const CHECK_UPDATE_TIMEOUT = 5000
 
@@ -114,7 +114,7 @@ function sendUserNotify({ status, message, account, userInfo }) {
 function sendGlobalNotify(tasks) {
   const message = tasks.map((t) => `账号 ${t.user}:\n${t.data}`).join('\n\n')
   const errorTasks = tasks.filter((t) => t.status == 'error')
-  const allFailed = tasks.length > 1 && errorTasks.length === tasks.length
+  const allFailed = tasks.length && errorTasks.length === tasks.length
   const title = `${NOTIFY_TITLE}${
     allFailed
       ? '😥'

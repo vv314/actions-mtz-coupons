@@ -20,7 +20,7 @@ test('Test getTemplateData', async () => {
 })
 
 test('Test getRenderList', async () => {
-  const renderList = await getRenderList(couponId.main.gid, guard)
+  const renderList = await getRenderList(531693, guard)
 
   return expect(renderList).toEqual(expect.any(Array))
 })

@@ -1,16 +1,10 @@
 import fetch from './fetch.js'
 import { getRenderList } from './template.js'
 
-function parseInstanceID(moduleId) {
-  const regFloat = /(\d+\.\d+)/
-
-  return moduleId.match(regFloat)?.[1] ?? ''
-}
-
 function matchMoudleData(id, jsText) {
   const endField = 'isStopTJCoupon'
   const reg = new RegExp(
-    `gdc-fx-new-netunion-red-envelope-${id}.+?(?=${endField})`
+    `gdc-fx-v2-netunion-red-envelope-${id}.+?(?=${endField})`
   )
 
   const res = jsText.match(reg)

@@ -2,7 +2,6 @@ import fetch from '../fetch.js'
 import ShadowGuard from '../shadow/index.js'
 import { createMTCookie, getUserInfo } from '../user.js'
 import gundamGrab from './gundamGrab.js'
-import DCwpqO from './DCwpqO.js'
 import { couponId, ECODE } from './const.js'
 
 async function runTask(cookie, guard) {
@@ -20,24 +19,15 @@ async function runTask(cookie, guard) {
 
     grabResult.push(...mainResult)
 
-    try {
-      const qualityShopResult = await gundamGrab.grabCoupon(
-        cookie,
-        couponId.shop.gid,
-        guard
-      )
-
-      grabResult.push(...qualityShopResult)
-    } catch {
-      // 仅对某些用户群体生效
-    }
-
     // try {
-    //   const DCwpqOResult = await DCwpqO.grabCoupon(cookie)
+    //   const qualityShopResult = await gundamGrab.grabCoupon(
+    //     cookie,
+    //     couponId.shop.gid,
+    //     guard
+    //   )
 
-    //   grabResult.push(...DCwpqOResult)
-    // } catch (e) {
-    //   console.log('eeee', e)
+    //   grabResult.push(...qualityShopResult)
+    // } catch {
     //   // 仅对某些用户群体生效
     // }
 
