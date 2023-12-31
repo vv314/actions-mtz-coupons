@@ -45,7 +45,9 @@ console.log(`
 
 function stringifyCoupons(coupons) {
   return coupons
-    .map((item) => `- ￥${item.amount}（${item.amountLimit}）`)
+    .map(
+      (item) => `- ￥${item.amount} (满${item.amountLimit}可用 - ${item.name})`
+    )
     .join('\n')
 }
 
