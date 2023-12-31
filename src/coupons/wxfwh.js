@@ -63,7 +63,8 @@ async function getPayloadTabs(cookie, viewId) {
 
 async function getPayload(
   cookie,
-  { gdId, pageId, renderList, appJs, fingerprint }
+  { gundamId, gdId, pageId, renderList, appJs },
+  guard
 ) {
   const jsText = await fetch(appJs).then((res) => res.text())
   let data = null
@@ -90,7 +91,7 @@ async function getPayload(
   }
 
   if (!data) {
-    throw new Error('服务号 Payload 生成失败')
+    throw new Error(`[${gundamId}] wxfwh Payload 生成失败`)
   }
 
   const tabs = await getPayloadTabs(cookie, data.viewId)
@@ -105,23 +106,14 @@ async function getPayload(
     gdId: gdId,
     pageId: pageId,
     instanceId: data.instanceId,
-    mtFingerprint: fingerprint
+    mtFingerprint: guard.fingerprint
   }
 }
 
 async function grabCoupon(cookie, gundamId, guard) {
   const actUrl = getActUrl(gundamId)
-  const { actName, gdId, pageId, renderList, appJs } = await getTemplateData(
-    cookie,
-    gundamId
-  )
-  const payload = await getPayload(cookie, {
-    gdId,
-    pageId,
-    renderList,
-    appJs,
-    fingerprint: guard.fingerprint
-  })
+  const tmplData = await getTemplateData(cookie, gundamId)
+  const payload = await getPayload(cookie, tmplData, guard)
 
   if (!payload.tabs.length) {
     return []
@@ -149,12 +141,12 @@ async function grabCoupon(cookie, gundamId, guard) {
   )
 
   if (res.code == 0) {
-    return formatCoupons(res.data.couponList, actName)
+    return formatCoupons(res.data.couponList, tmplData.actName)
   }
 
   const apiInfo = {
     api: 'generalcoupon/fetch',
-    name: actName,
+    name: tmplData.actName,
     msg: res.msg || res.message
   }
 

@@ -3,32 +3,47 @@ import { dateFormat } from '../util/index.js'
 import { getTemplateData, getRenderList, matchMoudleData } from '../template.js'
 import { ECODE } from './const.js'
 
-async function getPayload(gundamId, appJs, guard) {
-  const renderList = await getRenderList(gundamId, guard)
-  const jsText = await fetch(appJs).then((res) => res.text())
-  let data = null
-
+function resolveRedMod(text, renderList) {
   try {
     for (const instanceId of renderList) {
-      data = matchMoudleData(
-        jsText,
-        `gdc-fx-v2-netunion-red-envelope-${instanceId}`,
-        'isStopTJCoupon'
-      )
+      const data =
+        matchMoudleData(
+          text,
+          `gdc-fx-v2-netunion-red-envelope-${instanceId}`,
+          'isStopTJCoupon'
+        ) ??
+        matchMoudleData(
+          text,
+          `gdc-fx-new-netunion-red-envelope-${instanceId}`,
+          'isStopTJCoupon'
+        )
 
       if (data) {
         data.instanceID = instanceId
         data.isStopTJCoupon = true
 
-        break
+        return data
       }
     }
   } catch {
     // ignore
   }
 
+  return null
+}
+
+async function getPayload(
+  cookie,
+  { gundamId, gdId, appJs, renderList },
+  guard
+) {
+  const jsText = await fetch(appJs).then((res) => res.text())
+  const data =
+    resolveRedMod(jsText, renderList) ??
+    resolveRedMod(jsText, await getRenderList(cookie, gdId, guard))
+
   if (!data) {
-    throw new Error('天天神券 Payload 生成失败')
+    throw new Error(`[${gundamId}] Gundam Payload 生成失败`)
   }
 
   return {
@@ -38,7 +53,8 @@ async function getPayload(gundamId, appJs, guard) {
     platform: 3,
     couponAllConfigIdOrderString: data.expandCouponIds.keys.join(','),
     couponConfigIdOrderCommaString: data.priorityCouponIds.keys.join(','),
-    gundamId: gundamId,
+    // 这里取 number 类型的 gdId
+    gundamId: gdId,
     instanceId: data.instanceID,
     h5Fingerprint: '',
     rubikCouponKey: data.cubeToken || '',
@@ -77,8 +93,8 @@ function formatCoupons(coupons, actName) {
 
 async function grabCoupon(cookie, gundamId, guard) {
   const actUrl = getActUrl(gundamId)
-  const { actName, appJs, gdId } = await getTemplateData(cookie, gundamId)
-  const payload = await getPayload(gdId, appJs, guard)
+  const tmplData = await getTemplateData(cookie, gundamId)
+  const payload = await getPayload(cookie, tmplData, guard)
   const res = await fetch.post(
     'https://mediacps.meituan.com/gundam/gundamGrabV4',
     payload,
@@ -93,12 +109,12 @@ async function grabCoupon(cookie, gundamId, guard) {
   )
 
   if (res.code == 0) {
-    return formatCoupons(res.data.coupons, actName)
+    return formatCoupons(res.data.coupons, tmplData.actName)
   }
 
   const apiInfo = {
     api: 'gundamGrabV4',
-    name: actName,
+    name: tmplData.actName,
     msg: res.msg || res.message
   }
 

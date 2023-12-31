@@ -1,14 +1,17 @@
 import { getTemplateData, getRenderList } from '../src/template.js'
 import ShadowGuard from '../src/shadow/index.js'
-import grab from '../src/coupons/gundamGrab.js'
-import { wxfwhActConf } from '../src/coupons/const.js'
+import mainGrab from '../src/coupons/gundam.js'
+import { createMTCookie, parseToken } from '../src/user.js'
+import { wxfwhActConfs } from '../src/coupons/const.js'
 
 const guard = new ShadowGuard()
+const tokens = parseToken(process.env.TOKEN)
+const cookie = createMTCookie(tokens[0].token)
 
-beforeAll(() => guard.init(grab.getActUrl(wxfwhActConf[0].gid)))
+beforeAll(() => guard.init(mainGrab.getActUrl(wxfwhActConfs[0].gid)))
 
 test('Test getTemplateData', async () => {
-  const res = await getTemplateData(null, wxfwhActConf[0].gid)
+  const res = await getTemplateData(null, wxfwhActConfs[0].gid)
 
   return expect(res).toMatchObject({
     pageId: expect.any(Number),
@@ -19,7 +22,7 @@ test('Test getTemplateData', async () => {
 })
 
 test('Test getRenderList', async () => {
-  const renderList = await getRenderList(422308, guard)
+  const renderList = await getRenderList(cookie, 422308, guard)
 
   return expect(renderList).toEqual(expect.any(Array))
 })

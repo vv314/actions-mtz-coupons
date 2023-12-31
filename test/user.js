@@ -1,12 +1,12 @@
 import tough from 'tough-cookie'
 import ShadowGuard from '../src/shadow/index.js'
-import grab from '../src/coupons/gundamGrab.js'
+import mainGrab from '../src/coupons/gundam.js'
 import { createMTCookie, getUserInfo, parseToken } from '../src/user.js'
 import { mainActConf } from '../src/coupons/const.js'
 
 const guard = new ShadowGuard()
 
-beforeAll(() => guard.init(grab.getActUrl(mainActConf[0].gid)))
+beforeAll(() => guard.init(mainGrab.getActUrl(mainActConf.gid)))
 
 test('Test Token Undefined', () => {
   expect(() => parseToken()).toThrow('请配置 TOKEN')

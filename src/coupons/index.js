@@ -1,39 +1,36 @@
 import fetch from '../fetch.js'
 import ShadowGuard from '../shadow/index.js'
 import { createMTCookie, getUserInfo } from '../user.js'
-import { mainActConf, wxfwhActConf, ECODE } from './const.js'
-import mainAct from './gundamGrab.js'
-import wxfwhAct from './wxfwh.js'
+import { mainActConf, gundamActConfs, wxfwhActConfs, ECODE } from './const.js'
+import gundam from './gundam.js'
+import wxfwh from './wxfwh.js'
 
 async function runTask(cookie, guard) {
   try {
     // 优先检测登录状态
     const userInfo = await getUserInfo(cookie)
-    const allResults = []
 
-    for (const conf of mainActConf) {
-      // 主活动，失败时向外抛出异常
-      const result = await mainAct.grabCoupon(cookie, conf.gid, guard)
+    // 主活动，失败时向外抛出异常
+    const results = await gundam.grabCoupon(cookie, mainActConf.gid, guard)
 
-      allResults.push(...result)
-    }
+    // 次要活动，并行执行提升效率
+    const asyncResults = await Promise.all([
+      ...gundamActConfs.map((conf) =>
+        gundam.grabCoupon(cookie, conf.gid, guard).catch(() => [])
+      ),
+      // 微信服务号活动
+      ...wxfwhActConfs.map((conf) =>
+        wxfwh.grabCoupon(cookie, conf.gid, guard).catch(() => [])
+      )
+    ])
 
-    for (const conf of wxfwhActConf) {
-      try {
-        // 微信服务号活动，失败时忽略
-        const wxResult = await wxfwhAct.grabCoupon(cookie, conf.gid, guard)
-
-        allResults.push(...wxResult)
-      } catch (e) {
-        // ignore
-      }
-    }
+    results.push(...asyncResults.flat())
 
     return {
       code: ECODE.SUCC,
       data: {
         userInfo,
-        coupons: allResults
+        coupons: results
       },
       msg: '成功'
     }
@@ -88,9 +85,7 @@ async function getCoupons(token, { maxRetry = 0, httpProxy }) {
   const cookieJar = createMTCookie(token)
 
   // 复用 guard
-  const guard = await new ShadowGuard().init(
-    mainAct.getActUrl(mainActConf[0].gid)
-  )
+  const guard = await new ShadowGuard().init(gundam.getActUrl(mainActConf.gid))
 
   async function main(retryTimes = 0) {
     const result = await runTask(cookieJar, guard)

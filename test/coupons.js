@@ -4,8 +4,10 @@ import { createMTCookie, parseToken } from '../src/user.js'
 import { getCoupons, ECODE } from '../src/coupons/index.js'
 import wxfwhGrab from '../src/coupons/wxfwh.js'
 
+const tokens = parseToken(process.env.TOKEN)
+const cookie = createMTCookie(tokens[0].token)
+
 test('Test Coupons', async () => {
-  const tokens = parseToken(process.env.TOKEN)
   const res = await getCoupons(tokens[0].token, {
     // proxy: 'http://127.0.0.1:8887'
   })
@@ -22,8 +24,6 @@ test('Test Token Error', async () => {
 })
 
 test('Test Result Format', async () => {
-  const tokens = parseToken(process.env.TOKEN)
-  const cookie = createMTCookie(tokens[0].token)
   const res = await wxfwhGrab.getCouponList(cookie, 'I5r2SYd5kTN1l1AkMhwCNA')
 
   expect(res).toBeTruthy()

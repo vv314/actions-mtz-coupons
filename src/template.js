@@ -19,6 +19,7 @@ async function getTemplateData(cookie, gundamId) {
     const globalData = JSON.parse(matchGlobal[1])
 
     return {
+      gundamId,
       gdId: globalData.gdId,
       actName: globalData.pageInfo.title,
       appJs: appJs,
@@ -45,7 +46,7 @@ function formatRendeInfo(renderInfo) {
 }
 
 // 通过接口获取真实的渲染列表
-async function getRenderList(gdNumId, guard) {
+async function getRenderList(cookie, gdNumId, guard) {
   let data
 
   try {
@@ -58,6 +59,7 @@ async function getRenderList(gdNumId, guard) {
           gdId: gdNumId,
           tenant: 'gundam'
         },
+        cookie,
         guard
       }
     )

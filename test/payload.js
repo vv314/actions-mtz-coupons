@@ -1,17 +1,19 @@
 import { getTemplateData } from '../src/template.js'
 import ShadowGuard from '../src/shadow/index.js'
-import mainAct from '../src/coupons/gundamGrab.js'
+import mainAct from '../src/coupons/gundam.js'
 import wxfwhAct from '../src/coupons/wxfwh.js'
-import { mainActConf, wxfwhActConf } from '../src/coupons/const.js'
+import { mainActConf, wxfwhActConfs } from '../src/coupons/const.js'
 import { createMTCookie, parseToken } from '../src/user.js'
 
 const guard = new ShadowGuard()
+const tokens = parseToken(process.env.TOKEN)
+const cookie = createMTCookie(tokens[0].token)
 
-beforeAll(() => guard.init(mainAct.getActUrl(mainActConf[0].gid)))
+beforeAll(() => guard.init(mainAct.getActUrl(mainActConf.gid)))
 
 test('Test Main Payload', async () => {
-  const { gdId, appJs } = await getTemplateData(null, mainActConf[0].gid)
-  const payload = await mainAct.getPayload(gdId, appJs, guard)
+  const tmplData = await getTemplateData(null, mainActConf.gid)
+  const payload = await mainAct.getPayload(cookie, tmplData, guard)
 
   return expect(payload).toMatchObject({
     actualLatitude: 0,
@@ -20,7 +22,7 @@ test('Test Main Payload', async () => {
     platform: 3,
     couponConfigIdOrderCommaString: expect.any(String),
     couponAllConfigIdOrderString: expect.any(String),
-    gundamId: gdId,
+    gundamId: tmplData.gdId,
     needTj: expect.any(Boolean),
     instanceId: expect.any(String),
     h5Fingerprint: '',
@@ -29,27 +31,16 @@ test('Test Main Payload', async () => {
 })
 
 test('Test Wxfwh Payload', async () => {
-  const tokens = parseToken(process.env.TOKEN)
-  const cookie = createMTCookie(tokens[0].token)
-  const { gdId, pageId, renderList, appJs } = await getTemplateData(
-    null,
-    wxfwhActConf[1].gid
-  )
-  const payload = await wxfwhAct.getPayload(cookie, {
-    gdId,
-    pageId,
-    renderList,
-    appJs,
-    fingerprint: guard.fingerprint
-  })
+  const tmplData = await getTemplateData(null, wxfwhActConfs[1].gid)
+  const payload = await wxfwhAct.getPayload(cookie, tmplData, guard)
 
   return expect(payload).toMatchObject({
     ctype: 'wm_wxapp',
     fpPlatform: 13,
     wxOpenId: '',
     appVersion: '',
-    gdId: gdId,
-    pageId: pageId,
+    gdId: tmplData.gdId,
+    pageId: tmplData.pageId,
     tabs: expect.any(Array),
     activityViewId: expect.any(String),
     instanceId: expect.any(String),
@@ -58,9 +49,7 @@ test('Test Wxfwh Payload', async () => {
 })
 
 test('Test Wxfwh grab', async () => {
-  const tokens = parseToken(process.env.TOKEN)
-  const cookie = createMTCookie(tokens[0].token)
-  const res = await wxfwhAct.grabCoupon(cookie, wxfwhActConf[1].gid, guard)
+  const res = await wxfwhAct.grabCoupon(cookie, wxfwhActConfs[1].gid, guard)
 
   return expect(res).toBeTruthy()
 })
