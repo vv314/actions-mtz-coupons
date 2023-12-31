@@ -1,5 +1,5 @@
 import fetch, { createCookieJar } from './fetch.js'
-import { ECODE, HOST } from './coupons/const.js'
+import { ECODE } from './coupons/const.js'
 
 function tokenFormat(token, index = 0) {
   const defToken = {
@@ -46,10 +46,14 @@ async function getMTUerId() {
 }
 
 async function getUserInfo(cookie, guard) {
-  const res = await fetch.post(`${HOST}/gundam/gundamLogin`, null, {
-    cookie: cookie,
-    guard: guard
-  })
+  const res = await fetch.post(
+    'https://mediacps.meituan.com/gundam/gundamLogin',
+    null,
+    {
+      cookie: cookie,
+      guard: guard
+    }
+  )
 
   if (res.code == 0) return res.data
 
@@ -69,7 +73,7 @@ function createMTCookie(token) {
   const content = token.startsWith('token=') ? token : `token=${token}`
   const cookieStr = [content, domain, path, http, expire].join(';')
 
-  cookieJar.setCookie(cookieStr, HOST)
+  cookieJar.setCookie(cookieStr, 'https://mediacps.meituan.com')
 
   return cookieJar
 }

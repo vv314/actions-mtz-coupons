@@ -13,4 +13,22 @@ function replacePhoneNumber(str) {
   )
 }
 
-export { readPkgJson, replacePhoneNumber }
+function groupBy(arr, key) {
+  return arr.reduce((acc, cur) => {
+    const k = cur[key]
+
+    acc[k] = acc[k] || []
+    acc[k].push(cur)
+
+    return acc
+  }, {})
+}
+
+function dateFormat(date) {
+  return new Date(date).toLocaleString('zh-CN', {
+    hour12: false,
+    timeZone: 'Asia/Shanghai'
+  })
+}
+
+export { dateFormat, groupBy, readPkgJson, replacePhoneNumber }

@@ -22,11 +22,26 @@ async function getTemplateData(cookie, gundamId) {
       gdId: globalData.gdId,
       actName: globalData.pageInfo.title,
       appJs: appJs,
-      pageId: globalData.pageId
+      pageId: globalData.pageId,
+      renderList: getRenderListFromGlobalData(globalData)
     }
   } catch (e) {
-    throw new Error(`活动配置数据获取失败: ${e}`)
+    throw new Error(`活动配置数据获取失败: gdId: ${gundamId}, ${e}`)
   }
+}
+
+function getRenderListFromGlobalData(globalData) {
+  const renderInfo = globalData.renderInfo?.componentRenderInfos
+
+  if (!renderInfo) return []
+
+  return formatRendeInfo(renderInfo)
+}
+
+function formatRendeInfo(renderInfo) {
+  return Object.entries(renderInfo)
+    .filter(([_, v]) => v.render)
+    .map(([k]) => k)
 }
 
 // 通过接口获取真实的渲染列表
@@ -52,11 +67,19 @@ async function getRenderList(gdNumId, guard) {
     throw new Error('renderinfo 接口调用失败:' + e.message)
   }
 
-  const renderList = Object.entries(data)
-    .filter(([_, v]) => v.render)
-    .map(([k]) => k)
-
-  return renderList
+  return formatRendeInfo(data)
 }
 
-export { getTemplateData, getRenderList }
+function matchMoudleData(text, start, end) {
+  const reg = new RegExp(`${start}.+?(?=${end})`)
+
+  const res = text.match(reg)
+
+  if (!res) return null
+
+  const data = eval(`({moduleId:"${res[0]}})`)
+
+  return data
+}
+
+export { getTemplateData, getRenderList, matchMoudleData }

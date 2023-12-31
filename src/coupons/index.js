@@ -1,41 +1,39 @@
 import fetch from '../fetch.js'
 import ShadowGuard from '../shadow/index.js'
 import { createMTCookie, getUserInfo } from '../user.js'
-import gundamGrab from './gundamGrab.js'
-import { couponId, ECODE } from './const.js'
+import { mainActConf, wxfwhActConf, ECODE } from './const.js'
+import mainAct from './gundamGrab.js'
+import wxfwhAct from './wxfwh.js'
 
 async function runTask(cookie, guard) {
   try {
     // 优先检测登录状态
-    const userInfo = await getUserInfo(cookie, guard)
-    const grabResult = []
+    const userInfo = await getUserInfo(cookie)
+    const allResults = []
 
-    // 主活动，失败时向外抛出异常
-    const mainResult = await gundamGrab.grabCoupon(
-      cookie,
-      couponId.main.gid,
-      guard
-    )
+    for (const conf of mainActConf) {
+      // 主活动，失败时向外抛出异常
+      const result = await mainAct.grabCoupon(cookie, conf.gid, guard)
 
-    grabResult.push(...mainResult)
+      allResults.push(...result)
+    }
 
-    // try {
-    //   const qualityShopResult = await gundamGrab.grabCoupon(
-    //     cookie,
-    //     couponId.shop.gid,
-    //     guard
-    //   )
+    for (const conf of wxfwhActConf) {
+      try {
+        // 微信服务号活动，失败时忽略
+        const wxResult = await wxfwhAct.grabCoupon(cookie, conf.gid, guard)
 
-    //   grabResult.push(...qualityShopResult)
-    // } catch {
-    //   // 仅对某些用户群体生效
-    // }
+        allResults.push(...wxResult)
+      } catch (e) {
+        // ignore
+      }
+    }
 
     return {
       code: ECODE.SUCC,
       data: {
         userInfo,
-        coupons: grabResult
+        coupons: allResults
       },
       msg: '成功'
     }
@@ -89,9 +87,9 @@ async function getCoupons(token, { maxRetry = 0, httpProxy }) {
 
   const cookieJar = createMTCookie(token)
 
-  // 在 main 之外获取 guard，避免重复初始化
+  // 复用 guard
   const guard = await new ShadowGuard().init(
-    gundamGrab.getActUrl(couponId.main.gid)
+    mainAct.getActUrl(mainActConf[0].gid)
   )
 
   async function main(retryTimes = 0) {

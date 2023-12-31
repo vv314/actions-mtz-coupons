@@ -10,6 +10,8 @@ import { guardVersion, csecPlatform, yodaReady } from './const.js'
 
 class ShadowGuard {
   version = guardVersion
+  fingerprint = ''
+  meta = {}
 
   constructor(opts) {
     this.context = {
@@ -22,9 +24,10 @@ class ShadowGuard {
     actUrl = actUrl instanceof URL ? actUrl.toString() : actUrl
 
     this.meta = await genMetaData(actUrl, this.version)
+    this.fingerprint = await getFingerprint(this.meta, this.version)
 
     if (!this.context.dfpId) {
-      this.context.dfpId = await this.getWebDfpId(this.meta)
+      this.context.dfpId = await this.getWebDfpId(this.fingerprint)
     }
 
     this.meta.k3 = this.context.dfpId
@@ -33,12 +36,11 @@ class ShadowGuard {
     return this
   }
 
-  async getWebDfpId(metaData) {
-    const fp = await getFingerprint(metaData, this.version)
+  async getWebDfpId(fingerprint) {
     const res = await fetch.post(
       'https://appsec-mobile.meituan.com/v1/webdfpid',
       {
-        data: fp
+        data: fingerprint
       }
     )
 
