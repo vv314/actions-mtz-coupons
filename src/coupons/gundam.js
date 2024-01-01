@@ -72,7 +72,7 @@ function formatCoupons(coupons, actName) {
   function extractNumber(text) {
     const match = text.match(/满(\d+)可用/)
 
-    return match ? parseInt(match[1], 10) : null
+    return match ? parseInt(match[1], 10) : 0
   }
 
   return coupons.map((item) => {
