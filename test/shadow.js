@@ -1,12 +1,12 @@
 import ShadowGuard from '../src/shadow/index.js'
-import mainGrab from '../src/coupons/gundam.js'
+import gundam from '../src/coupons/gundam.js'
 import { mainActConf } from '../src/coupons/const.js'
 
 const guard = new ShadowGuard({
   dfpId: '8v0111yz74185w7deu38vz71222u80w981zvylws4779123469xu4399'
 })
 
-beforeAll(() => guard.init(mainGrab.getActUrl(mainActConf.gid)))
+beforeAll(() => guard.init(gundam.getActUrl(mainActConf.gid)))
 
 test('Test Generate Session', () =>
   expect(guard.meta.sessionId).toHaveLength(32))

@@ -35,6 +35,8 @@ async function fetch(url, opts = {}) {
 
   if (fetch._proxyAgent) {
     opts.agent = fetch._proxyAgent
+  } else if (opts.proxy) {
+    opts.agent = new HttpsProxyAgent(opts.proxy)
   }
 
   opts.headers = Object.assign({}, defHeader, opts.headers)

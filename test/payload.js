@@ -1,7 +1,7 @@
 import { getTemplateData } from '../src/template.js'
 import ShadowGuard from '../src/shadow/index.js'
-import mainAct from '../src/coupons/gundam.js'
-import wxfwhAct from '../src/coupons/wxfwh.js'
+import gundam from '../src/coupons/gundam.js'
+import wxfwh from '../src/coupons/wxfwh.js'
 import { mainActConf, wxfwhActConfs } from '../src/coupons/const.js'
 import { createMTCookie, parseToken } from '../src/user.js'
 
@@ -9,11 +9,11 @@ const guard = new ShadowGuard()
 const tokens = parseToken(process.env.TOKEN)
 const cookie = createMTCookie(tokens[0].token)
 
-beforeAll(() => guard.init(mainAct.getActUrl(mainActConf.gid)))
+beforeAll(() => guard.init(gundam.getActUrl(mainActConf.gid)))
 
 test('Test Main Payload', async () => {
-  const tmplData = await getTemplateData(null, mainActConf.gid)
-  const payload = await mainAct.getPayload(cookie, tmplData, guard)
+  const tmplData = await getTemplateData(cookie, mainActConf.gid, guard)
+  const payload = await gundam.getPayload(tmplData)
 
   return expect(payload).toMatchObject({
     actualLatitude: 0,
@@ -31,8 +31,8 @@ test('Test Main Payload', async () => {
 })
 
 test('Test Wxfwh Payload', async () => {
-  const tmplData = await getTemplateData(null, wxfwhActConfs[1].gid)
-  const payload = await wxfwhAct.getPayload(cookie, tmplData, guard)
+  const tmplData = await getTemplateData(cookie, wxfwhActConfs[0].gid, guard)
+  const payload = await wxfwh.getPayload(cookie, tmplData, guard)
 
   return expect(payload).toMatchObject({
     ctype: 'wm_wxapp',
@@ -46,10 +46,4 @@ test('Test Wxfwh Payload', async () => {
     instanceId: expect.any(String),
     mtFingerprint: expect.any(String)
   })
-})
-
-test('Test Wxfwh grab', async () => {
-  const res = await wxfwhAct.grabCoupon(cookie, wxfwhActConfs[1].gid, guard)
-
-  return expect(res).toBeTruthy()
 })

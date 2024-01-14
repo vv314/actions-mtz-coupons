@@ -1,6 +1,6 @@
 import fetch from '../fetch.js'
 import { dateFormat } from '../util/index.js'
-import { getTemplateData, getRenderList, matchMoudleData } from '../template.js'
+import { getTemplateData, matchMoudleData } from '../template.js'
 import { ECODE } from './const.js'
 
 function resolveRedMod(text, renderList) {
@@ -32,15 +32,9 @@ function resolveRedMod(text, renderList) {
   return null
 }
 
-async function getPayload(
-  cookie,
-  { gundamId, gdId, appJs, renderList },
-  guard
-) {
+async function getPayload({ gundamId, gdId, appJs, renderList }) {
   const jsText = await fetch(appJs).then((res) => res.text())
-  const data =
-    resolveRedMod(jsText, renderList) ??
-    resolveRedMod(jsText, await getRenderList(cookie, gdId, guard))
+  const data = resolveRedMod(jsText, renderList)
 
   if (!data) {
     throw new Error(`[${gundamId}] Gundam Payload 生成失败`)
@@ -93,8 +87,8 @@ function formatCoupons(coupons, actName) {
 
 async function grabCoupon(cookie, gundamId, guard) {
   const actUrl = getActUrl(gundamId)
-  const tmplData = await getTemplateData(cookie, gundamId)
-  const payload = await getPayload(cookie, tmplData, guard)
+  const tmplData = await getTemplateData(cookie, gundamId, guard)
+  const payload = await getPayload(tmplData)
   const res = await fetch.post(
     'https://mediacps.meituan.com/gundam/gundamGrabV4',
     payload,

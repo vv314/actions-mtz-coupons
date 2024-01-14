@@ -1,8 +1,7 @@
 import fetch from '../fetch.js'
-import { getRenderList, getTemplateData } from '../template.js'
+import { getTemplateData } from '../template.js'
 import { ECODE } from './const.js'
 
-const gundamId = '1VlhFT'
 const fetchStatus = {
   CAN_FETCH: 0,
   FETCH_ALREADY: 1,
@@ -41,8 +40,7 @@ function resolveMetadata(renderList, jsText) {
   return null
 }
 
-async function getTicketConfig(gdId, appJs) {
-  const renderList = await getRenderList(gdId)
+async function getTicketConfig(appJs, renderList) {
   const jsText = await fetch(appJs).then((res) => res.text())
   const data = resolveMetadata(renderList, jsText)
   const ticketConfig = data.ticketConfig.makeOptions1.ticketInfo1
@@ -53,17 +51,28 @@ async function getTicketConfig(gdId, appJs) {
   }
 }
 
-async function getParams(gdId, channelUrl, instanceId) {
-  return {
-    couponReferId: channelUrl,
+async function getPayload({ referId, gdId, pageId, instanceId }, guard) {
+  const query = {
+    couponReferId: referId,
     actualLng: 0,
     actualLat: 0,
     geoType: 2,
-    versiom: 1,
+    version: 1,
     isInDpEnv: 0,
     gdPageId: gdId,
-    instanceId: instanceId
+    pageId: pageId,
+    instanceId: instanceId ?? '',
+    sceneId: 1
   }
+  const body = {
+    appVersion: '',
+    cType: 'wm_wxapp',
+    fpPlatform: 3,
+    mtFingerprint: guard.fingerprint,
+    wxOpenId: ''
+  }
+
+  return { body, query }
 }
 
 function formatCoupons(coupons, info) {
@@ -77,7 +86,7 @@ function formatCoupons(coupons, info) {
   }))
 }
 
-async function getLotteryInfo(cookie, couponIds) {
+async function getCouponList(cookie, couponIds) {
   const res = await fetch.get(
     `https://promotion.waimai.meituan.com/lottery/couponcomponent/info/v2`,
     {
@@ -93,68 +102,57 @@ async function getLotteryInfo(cookie, couponIds) {
       }
     }
   )
-  const couponList = res.data.couponList.filter(
-    (data) =>
-      data.status === fetchStatus.CAN_FETCH ||
-      data.status === fetchStatus.FETCH_ALREADY
-  )
 
-  return couponList
+  return res.data.couponList
 }
 
-async function grabCoupon(cookie) {
+async function grabCoupon(cookie, gundamId, guard) {
   const actUrl = getActUrl(gundamId)
   const tmplData = await getTemplateData(cookie, gundamId)
-  const ticketConfig = await getTicketConfig(tmplData.gdId, tmplData.appJs)
-  const lotteryCoupons = await getLotteryInfo(cookie, [
+  const ticketConfig = await getTicketConfig(
+    tmplData.appJs,
+    tmplData.renderList
+  )
+  const couponList = await getCouponList(cookie, [
     ticketConfig.channelUrl ?? ''
   ])
-  const results = []
+  const availCoupons = couponList.filter((coupon) =>
+    [fetchStatus.CAN_FETCH].includes(coupon.status)
+  )
+  const results = Promise.all(
+    availCoupons
+      .map(async (coupon) => {
+        const payload = getPayload(
+          {
+            referId: coupon.couponReferId,
+            gdId: tmplData.gdId,
+            pageId: tmplData.pageId,
+            instanceId: ticketConfig.instanceId
+          },
+          guard
+        )
+        const res = await fetch.post(
+          `https://promotion.waimai.meituan.com/lottery/couponcomponent/fetchcomponentcoupon/v2`,
+          payload.body,
+          {
+            cookie,
+            params: payload.query,
+            headers: {
+              mtgsig: '{}',
+              Origin: actUrl.origin,
+              Referer: actUrl.origin + '/'
+            }
+          }
+        )
 
-  for (const coupon of lotteryCoupons) {
-    if (coupon.status === fetchStatus.FETCH_ALREADY) {
-      results.push(coupon)
-
-      continue
-    }
-
-    const res = await fetch.post(
-      `https://promotion.waimai.meituan.com/lottery/couponcomponent/fetchcomponentcoupon/v2`,
-      {
-        appVersion: '',
-        cType: 'wm_wxapp',
-        fpPlatform: 3,
-        mtFingerprint: '',
-        wxOpenId: ''
-      },
-      {
-        cookie,
-        params: {
-          couponReferId: coupon.couponReferId,
-          actualLng: 0,
-          actualLat: 0,
-          geoType: 2,
-          version: 1,
-          isInDpEnv: 0,
-          gdPageId: tmplData.gdId,
-          pageId: tmplData.pageId,
-          instanceId: ticketConfig.instanceId ?? '',
-          sceneId: 1
-        },
-        headers: {
-          mtgsig: '{}',
-          Origin: actUrl.origin,
-          Referer: actUrl.origin + '/'
+        if (res.code == 0) {
+          return coupon
         }
-      }
-    )
 
-    if (res.code == 0) {
-      results.push(coupon)
-    } else {
-      // console.log('抢券失败', res)
-    }
-  }
+        return null
+      })
+      .filter(Boolean)
+  )
 
   return formatCoupons(results, {
     actName: tmplData.actName,
@@ -164,6 +162,9 @@ async function grabCoupon(cookie) {
 
 export default {
   grabCoupon,
-  getActUrl
+  getActUrl,
+  getCouponList,
+  getPayload,
+  getTicketConfig,
+  getTemplateData
 }
-export { getParams }

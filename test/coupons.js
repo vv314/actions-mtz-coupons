@@ -1,30 +1,54 @@
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 
+import ShadowGuard from '../src/shadow/index.js'
 import { createMTCookie, parseToken } from '../src/user.js'
-import { getCoupons, ECODE } from '../src/coupons/index.js'
-import wxfwhGrab from '../src/coupons/wxfwh.js'
+import { grabCoupons, ECODE } from '../src/coupons/index.js'
+import { mainActConf, wxfwhActConfs } from '../src/coupons/const.js'
+import gundam from '../src/coupons/gundam.js'
+import wxfwh from '../src/coupons/wxfwh.js'
+import lottery from '../src/coupons/lottery.js'
 
+const guard = new ShadowGuard()
 const tokens = parseToken(process.env.TOKEN)
 const cookie = createMTCookie(tokens[0].token)
 
-test('Test Coupons', async () => {
-  const res = await getCoupons(tokens[0].token, {
-    // proxy: 'http://127.0.0.1:8887'
-  })
+beforeAll(() => guard.init(gundam.getActUrl(mainActConf.gid)))
 
-  expect(res.code).toBe(ECODE.SUCC)
+test('Test Main Grab', async () => {
+  const res = await gundam.grabCoupon(cookie, mainActConf.gid, guard)
+
+  return expect(res.length).toBeGreaterThan(0)
 })
 
 test('Test Token Error', async () => {
-  const res = await getCoupons('invalid token', {
+  const res = await grabCoupons('invalid token', {
     // proxy: 'http://127.0.0.1:8887'
   })
 
-  expect(res.code).toBe(ECODE.AUTH)
+  return expect(res.code).toBe(ECODE.AUTH)
 })
 
-test('Test Result Format', async () => {
-  const res = await wxfwhGrab.getCouponList(cookie, 'I5r2SYd5kTN1l1AkMhwCNA')
+test('Test Wxfwh grab', async () => {
+  const res = await wxfwh.grabCoupon(cookie, wxfwhActConfs[0].gid, guard)
 
-  expect(res).toBeTruthy()
+  return expect(res).toBeTruthy()
 })
+
+test('Test wxfwh Result', async () => {
+  const res = await wxfwh.getCouponList(cookie, 'I5r2SYd5kTN1l1AkMhwCNA')
+
+  return expect(res.length).toBeGreaterThan(0)
+})
+
+// test('Test lottery Result', async () => {
+//   const tmplData = await lottery.getTemplateData(cookie, '1VlhFT', guard)
+//   const ticketConfig = await lottery.getTicketConfig(
+//     tmplData.gdId,
+//     tmplData.appJs
+//   )
+//   const res = await lottery.getCouponList(cookie, [
+//     ticketConfig.channelUrl ?? ''
+//   ])
+
+//   return expect(res).toBeTruthy()
+// })

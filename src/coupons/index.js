@@ -10,10 +10,10 @@ async function runTask(cookie, guard) {
     // 优先检测登录状态
     const userInfo = await getUserInfo(cookie)
 
-    // 主活动，失败时向外抛出异常
+    // 主线任务，失败时向外抛出异常
     const results = await gundam.grabCoupon(cookie, mainActConf.gid, guard)
 
-    // 次要活动，并行执行提升效率
+    // 支线任务，并行执行提升效率
     const asyncResults = await Promise.all([
       ...gundamActConfs.map((conf) =>
         gundam.grabCoupon(cookie, conf.gid, guard).catch(() => [])
@@ -37,7 +37,7 @@ async function runTask(cookie, guard) {
   } catch (e) {
     let code, msg
 
-    // console.log('getCoupons error', e)
+    // console.log('grabCoupon error', e)
 
     switch (e.code) {
       case ECODE.AUTH:
@@ -68,7 +68,7 @@ async function runTask(cookie, guard) {
  * @param  {Number} maxRetry  最大重试次数
  * @return {Promise(<Object>)} 结果
  */
-async function getCoupons(token, { maxRetry = 0, httpProxy }) {
+async function grabCoupons(token, { maxRetry = 0, proxy }) {
   if (!token) {
     return {
       code: ECODE.RUNTIME,
@@ -78,8 +78,8 @@ async function getCoupons(token, { maxRetry = 0, httpProxy }) {
   }
 
   // 优先设置代理
-  if (httpProxy) {
-    fetch.setProxyAgent(httpProxy)
+  if (proxy) {
+    fetch.setProxyAgent(proxy)
   }
 
   const cookieJar = createMTCookie(token)
@@ -104,4 +104,4 @@ async function getCoupons(token, { maxRetry = 0, httpProxy }) {
   return main()
 }
 
-export { getCoupons, ECODE }
+export { grabCoupons, ECODE }

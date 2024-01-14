@@ -6,7 +6,7 @@ import pLimit from 'p-limit'
 import Notifier from './src/notifier/index.js'
 import { parseToken } from './src/user.js'
 import updateNotifier from './src/update-notifier.js'
-import { getCoupons } from './src/coupons/index.js'
+import { grabCoupons } from './src/coupons/index.js'
 import { readPkgJson } from './src/util/index.js'
 
 const { version: currentVersion } = readPkgJson()
@@ -138,7 +138,7 @@ function parseAccountName(account, userInfo = {}) {
 }
 
 async function doJob(account, progress) {
-  const res = await getCoupons(account.token, { maxRetry: MAX_RETRY_COUNT })
+  const res = await grabCoupons(account.token, { maxRetry: MAX_RETRY_COUNT })
   const accountName = parseAccountName(account)
 
   console.log(

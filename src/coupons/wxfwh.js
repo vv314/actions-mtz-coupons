@@ -86,7 +86,7 @@ async function getPayload(
         break
       }
     }
-  } catch {
+  } catch (e) {
     // ignore
   }
 
@@ -112,7 +112,7 @@ async function getPayload(
 
 async function grabCoupon(cookie, gundamId, guard) {
   const actUrl = getActUrl(gundamId)
-  const tmplData = await getTemplateData(cookie, gundamId)
+  const tmplData = await getTemplateData(cookie, gundamId, guard)
   const payload = await getPayload(cookie, tmplData, guard)
 
   if (!payload.tabs.length) {

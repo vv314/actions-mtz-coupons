@@ -7,16 +7,16 @@ function extractAppJsUrl(text) {
   return match ? match[0] : null
 }
 
-async function getTemplateData(cookie, gundamId) {
+async function getTemplateData(cookie, gundamId, guard) {
   const text = await fetch(
-    `https://market.waimai.meituan.com/api/template/get?env=current&el_biz=waimai&el_page=gundam.loader&gundam_id=${gundamId}`,
-    { cookie }
+    `https://market.waimai.meituan.com/api/template/get?env=current&el_biz=waimai&el_page=gundam.loader&gundam_id=${gundamId}`
   ).then((rep) => rep.text())
   const matchGlobal = text.match(/globalData: ({.+})/)
   const appJs = extractAppJsUrl(text)
 
   try {
     const globalData = JSON.parse(matchGlobal[1])
+    const renderList = await getRenderList(cookie, globalData, guard)
 
     return {
       gundamId,
@@ -24,30 +24,40 @@ async function getTemplateData(cookie, gundamId) {
       actName: globalData.pageInfo.title,
       appJs: appJs,
       pageId: globalData.pageId,
-      renderList: getRenderListFromGlobalData(globalData)
+      renderList: renderList
     }
   } catch (e) {
     throw new Error(`活动配置数据获取失败: gdId: ${gundamId}, ${e}`)
   }
 }
 
-function getRenderListFromGlobalData(globalData) {
-  const renderInfo = globalData.renderInfo?.componentRenderInfos
+function getLocalRenderList(renderInfo) {
+  if (renderInfo.status != 0 || !renderInfo?.componentRenderInfos) return []
 
-  if (!renderInfo) return []
-
-  return formatRendeInfo(renderInfo)
+  return filterRenderableKeys(renderInfo.componentRenderInfos)
 }
 
-function formatRendeInfo(renderInfo) {
+function filterRenderableKeys(renderInfo) {
   return Object.entries(renderInfo)
     .filter(([_, v]) => v.render)
     .map(([k]) => k)
 }
 
 // 通过接口获取真实的渲染列表
-async function getRenderList(cookie, gdNumId, guard) {
+async function getRenderList(
+  cookie,
+  { gundamViewId, gdId, pageId, renderInfo },
+  guard
+) {
   let data
+
+  if (renderInfo) {
+    const renderList = getLocalRenderList(renderInfo)
+
+    if (renderList.length > 0) {
+      return renderList
+    }
+  }
 
   try {
     const res = await fetch.get(
@@ -56,7 +66,9 @@ async function getRenderList(cookie, gdNumId, guard) {
         params: {
           el_biz: 'waimai',
           el_page: 'gundam.loader',
-          gdId: gdNumId,
+          gundam_id: gundamViewId,
+          gdId: gdId,
+          pageId: pageId,
           tenant: 'gundam'
         },
         cookie,
@@ -66,10 +78,12 @@ async function getRenderList(cookie, gdNumId, guard) {
 
     data = res.data
   } catch (e) {
+    console.log(e)
+
     throw new Error('renderinfo 接口调用失败:' + e.message)
   }
 
-  return formatRendeInfo(data)
+  return filterRenderableKeys(data)
 }
 
 function matchMoudleData(text, start, end) {
