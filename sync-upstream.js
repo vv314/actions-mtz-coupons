@@ -35,7 +35,7 @@ function setUpstream(upstreamUrl) {
 }
 
 function pullUpstream() {
-  return gitExec('pull upstream main:main')
+  return gitExec('pull --rebase upstream main:main')
 }
 
 function pushOrigin() {
