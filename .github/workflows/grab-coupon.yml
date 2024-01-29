@@ -31,9 +31,12 @@ jobs:
           node-version-file: 'package.json'
           cache: 'yarn'
 
+      - name:  set version
+        run: yarn set version latest --yarn-path
+        
       - name: Install dependencies
         run: yarn install --frozen-lockfile
-
+        
       - name: Run app
         run: yarn start
         env:
