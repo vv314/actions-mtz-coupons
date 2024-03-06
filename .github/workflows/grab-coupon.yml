@@ -65,5 +65,5 @@ jobs:
           LARK_WEBHOOK: ${{ secrets.LARK_WEBHOOK }}
           PUSHPLUS_TOKEN: ${{ secrets.PUSHPLUS_TOKEN }}
           WXPUSHER_TOKEN: ${{ secrets.WXPUSHER_TOKEN }}
-          WXPUSHER_TOPIC: ${{ secrets.WXPUSHER_TOPIC }}
+          WXPUSHER_TOPIC: ${{ secrets.WXPUSHER_TOPICID }}
           DINGTALK_WEBHOOK: ${{ secrets.DINGTALK_WEBHOOK }}

@@ -281,9 +281,8 @@ class Notifier {
       result.push(this.sendPushplus(title, content, options))
     }
 
-    console.log('this.wxpusher', options, this.wxpusher)
+    console.log('this.wxpusher', this.wxpusher)
     if (this.wxpusher && this.wxpusher.token && this.wxpusher.topicId) {
-      console.log('调用了')
       result.push(this.sendWxPusher(title, content))
     }
 
