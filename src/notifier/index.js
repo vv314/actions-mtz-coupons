@@ -281,7 +281,7 @@ class Notifier {
       result.push(this.sendPushplus(title, content, options))
     }
 
-    if (this.wxpusherToken) {
+    if (this.wxpusher && this.wxpusher.token && this.wxpusher.topicId) {
       result.push(this.sendWxPusher(title, content, options))
     }
 
