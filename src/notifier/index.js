@@ -281,15 +281,6 @@ class Notifier {
       result.push(this.sendPushplus(title, content, options))
     }
 
-    console.log(
-      'wxpusher',
-      process.env.TOKEN,
-      process.env.WXPUSHER_TOKEN,
-      options,
-      this.wxpusher,
-      this.wxpusher.token,
-      this.wxpusher.topicId
-    )
     if (this.wxpusher && this.wxpusher.token && this.wxpusher.topicId) {
       result.push(this.sendWxPusher(title, content))
     }
