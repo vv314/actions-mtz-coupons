@@ -12,9 +12,8 @@ async function sendWxPusher({ title = '', content = '', token, topicId }) {
 
   return doPost(url, data)
     .then((res) => {
-      if (res.code != 200) throw res.msg
-
-      return { success: true, msg: 'wxpusher 推送成功' }
+      console.log('wxpusher 推送结果:', res)
+      return res
     })
     .catch((e) => ({ success: false, msg: `wxpusher 推送失败: ${e}` }))
 }
