@@ -281,8 +281,14 @@ class Notifier {
       result.push(this.sendPushplus(title, content, options))
     }
 
+    console.log(
+      'wxpusher',
+      this.wxpusher,
+      this.wxpusher.token,
+      this.wxpusher.topicId
+    )
     if (this.wxpusher && this.wxpusher.token && this.wxpusher.topicId) {
-      result.push(this.sendWxPusher(title, content, options))
+      result.push(this.sendWxPusher(title, content))
     }
 
     if (this.qmsg && this.qmsg.token) {

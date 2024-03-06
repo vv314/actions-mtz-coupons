@@ -228,7 +228,7 @@ async function main() {
 
   const globalPushQueue = sendGlobalNotify(tasks)
   const userPushQueue = tasks.map((res) => res.pushQueue).flat()
-
+  console.log('全局日志', globalPushQueue)
   // 打印通知结果，用户通知优先
   await printNotifyResult(userPushQueue.concat(globalPushQueue))
 
