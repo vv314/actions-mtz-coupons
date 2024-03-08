@@ -64,4 +64,6 @@ jobs:
           QYWX_SEND_CONF: ${{ secrets.QYWX_SEND_CONF }}
           LARK_WEBHOOK: ${{ secrets.LARK_WEBHOOK }}
           PUSHPLUS_TOKEN: ${{ secrets.PUSHPLUS_TOKEN }}
+          WXPUSHER_TOKEN: ${{ secrets.WXPUSHER_TOKEN }}
+          WXPUSHER_TOPICID: ${{ secrets.WXPUSHER_TOPICID }}
           DINGTALK_WEBHOOK: ${{ secrets.DINGTALK_WEBHOOK }}

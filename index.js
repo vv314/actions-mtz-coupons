@@ -18,6 +18,10 @@ const notifier = new Notifier({
   workWechat: process.env.QYWX_SEND_CONF,
   serverChanToken: process.env.SC_SEND_KEY,
   pushplusToken: process.env.PUSHPLUS_TOKEN,
+  wxpusher: {
+    token: process.env.WXPUSHER_TOKEN,
+    topicId: process.env.WXPUSHER_TOPICID
+  },
   dingTalkWebhook: process.env.DINGTALK_WEBHOOK,
   telegram: {
     botToken: process.env.TG_BOT_TOKEN,
@@ -224,7 +228,6 @@ async function main() {
 
   const globalPushQueue = sendGlobalNotify(tasks)
   const userPushQueue = tasks.map((res) => res.pushQueue).flat()
-
   // 打印通知结果，用户通知优先
   await printNotifyResult(userPushQueue.concat(globalPushQueue))
 

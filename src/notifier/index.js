@@ -5,6 +5,7 @@ import sendServerChan from './vendor/server-chan.js'
 import sendPushplus from './vendor/pushplus.js'
 import sendDingTalk from './vendor/dingtalk.js'
 import sendQmsg from './vendor/qmsg.js'
+import sendWxPusher from './vendor/wxpusher.js'
 import { sendWorkWechat, getQywxAccessToken } from './vendor/work-wechat.js'
 
 class Notifier {
@@ -13,6 +14,7 @@ class Notifier {
     this.larkWebhook = options.larkWebhook
     this.serverChanToken = options.serverChanToken
     this.pushplusToken = options.pushplusToken
+    this.wxpusher = options.wxpusher
     this.telegram = options.telegram
     this.dingTalkWebhook = options.dingTalkWebhook
     this.qmsg = options.qmsg
@@ -143,6 +145,23 @@ class Notifier {
   }
 
   /**
+   * wxpusher 通知
+   * https://wxpusher.zjiecode.com/docs/#/
+   *
+   * @param  {String} title   标题
+   * @param  {String} content  内容
+   * @return {Promise<String>}  推送结果
+   */
+  async sendWxPusher(title = '', content = '') {
+    return sendWxPusher({
+      title,
+      content,
+      token: this.wxpusher.token,
+      topicId: this.wxpusher.topicId
+    })
+  }
+
+  /**
    * 企业微信应用消息
    * https://work.weixin.qq.com/api/doc/90000/90135/90236
    *
@@ -260,6 +279,10 @@ class Notifier {
 
     if (this.pushplusToken) {
       result.push(this.sendPushplus(title, content, options))
+    }
+
+    if (this.wxpusher && this.wxpusher.token && this.wxpusher.topicId) {
+      result.push(this.sendWxPusher(title, content))
     }
 
     if (this.qmsg && this.qmsg.token) {
