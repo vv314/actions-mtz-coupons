@@ -80,7 +80,7 @@ Github Actions 工作流支持**手动**与**自动**两种触发方式。
 
 ## 🤹‍♂️ 进阶用法
 
-- [使用 JSON Token](./token配置.md)
+- [使用 JSON Token](./docs/token配置.md)
 - [添加消息通知](./docs/通知.md)
 - [使用多账户配置](./docs/token配置.md)
 - [脚本更新](./docs/更新.md)
