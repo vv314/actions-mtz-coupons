@@ -43,9 +43,6 @@
     "url": "https://github.com/vv314/actions-mtwm-coupons/issues"
   },
   "homepage": "https://github.com/vv314/actions-mtwm-coupons#readme",
-  "engines": {
-    "node": ">=18.17.1"
-  },
   "license": "MIT",
   "packageManager": "pnpm@8.12.1+sha256.28ca61ece5a496148b73fabc9afb820f9c3fec4f55f04ce45a2cea0a5219f2e1"
 }

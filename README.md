@@ -25,7 +25,7 @@
 
 ### 环境要求
 
-- [Node.js](https://nodejs.org/) v18.0 及以上
+- [Node.js](https://nodejs.org/) v20.0 及以上
 - [pnpm](https://pnpm.io/) v8.0 及以上
 
 ### 获取账号 Token
