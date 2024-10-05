@@ -8,18 +8,17 @@ const guard = new ShadowGuard({
 
 beforeAll(() => guard.init(gundam.getActUrl(mainActConf.gid)))
 
-test('Test Generate Session', () =>
-  expect(guard.meta.sessionId).toHaveLength(32))
+test('Generate Session', () => expect(guard.meta.sessionId).toHaveLength(32))
 
-test('Test Generate Meta', () => expect(guard.meta).toBeTruthy())
+test('Generate Meta', () => expect(guard.meta).toBeTruthy())
 
-test('Test Web FpId', async () => {
+test('Web FpId', async () => {
   const dfpId = await guard.getWebDfpId(guard.fingerprint)
 
   return expect(dfpId).toHaveLength(56)
 })
 
-test('Test MtgSig', async () => {
+test('MtgSig', async () => {
   guard.context.timestamp = 1702734030440
   guard.context.runtimeKey = 'r0ejVfUUFC1DvZh3L/0z'
   guard.context.siua =
@@ -34,7 +33,7 @@ test('Test MtgSig', async () => {
   expect(mtgSig).toBeTruthy()
 })
 
-test('Test Base Signature', async () => {
+test('Base Signature', async () => {
   const sig = await guard.getReqSig({
     url: 'https://mediacps.meituan.com/gundam/gundamLogin',
     method: 'POST'

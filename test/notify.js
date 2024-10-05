@@ -27,7 +27,7 @@ const content = [
   '- ¥15 (满59可用 - 便利店满减红包)'
 ].join('\n')
 
-test('Test Notifier', async () => {
+test('Notifier', async () => {
   const res = await Promise.all(
     notifier.notify(title, `账号 X:\n${content}\n- Time ${time}`)
   )

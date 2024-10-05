@@ -8,11 +8,11 @@ const guard = new ShadowGuard()
 
 beforeAll(() => guard.init(mainGrab.getActUrl(mainActConf.gid)))
 
-test('Test Token Undefined', () => {
+test('Token Undefined', () => {
   expect(() => parseToken()).toThrow('请配置 TOKEN')
 })
 
-test('Test String Token', () => {
+test('String Token', () => {
   expect(parseToken('aaa')).toContainEqual({
     token: 'aaa',
     alias: '',
@@ -25,7 +25,7 @@ test('Test String Token', () => {
   })
 })
 
-test('Test JSON Token', () => {
+test('JSON Token', () => {
   const token = `
     {
       "token": "aaa"
@@ -44,7 +44,7 @@ test('Test JSON Token', () => {
   })
 })
 
-test('Test Multiple Token', () => {
+test('Multiple Token', () => {
   expect(parseToken('["aaa", {"token": "bbb", "alias": "jeff"}]')).toEqual(
     expect.arrayContaining([
       {
@@ -71,22 +71,22 @@ test('Test Multiple Token', () => {
   )
 })
 
-test('Test JSON Token Verification', () => {
+test('JSON Token Verification', () => {
   expect(() => parseToken('{token: "aaa"}')).toThrow('TOKEN 解析错误')
 })
 
-test('Test Multiple Token Verification', () => {
+test('Multiple Token Verification', () => {
   expect(() => parseToken('["aaa", {token: "bbb"}]')).toThrow('TOKEN 解析错误')
 })
 
-test('Test Cookie', () => {
+test('Cookie', () => {
   const tokens = parseToken(process.env.TOKEN)
   const cookie = createMTCookie(tokens[0].token)
 
   expect(cookie).toBeInstanceOf(tough.CookieJar)
 })
 
-test('Test Login', async () => {
+test('Login', async () => {
   const tokens = parseToken(process.env.TOKEN)
   const cookie = createMTCookie(tokens[0].token)
   const userInfo = await getUserInfo(cookie)
@@ -94,7 +94,7 @@ test('Test Login', async () => {
   expect(userInfo).toBeTruthy()
 })
 
-test('Test Login With Guard', async () => {
+test('Login With Guard', async () => {
   const tokens = parseToken(process.env.TOKEN)
   const cookie = createMTCookie(tokens[0].token)
   const userInfo = await getUserInfo(cookie, guard)

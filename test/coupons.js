@@ -14,13 +14,13 @@ const cookie = createMTCookie(tokens[0].token)
 
 beforeAll(() => guard.init(gundam.getActUrl(mainActConf.gid)))
 
-test('Test Main Grab', async () => {
+test('Main Grab', async () => {
   const res = await gundam.grabCoupon(cookie, mainActConf.gid, guard)
 
   return expect(res.length).toBeGreaterThan(0)
 })
 
-test('Test Token Error', async () => {
+test('Token Error', async () => {
   const res = await grabCoupons('invalid token', {
     // proxy: 'http://127.0.0.1:8887'
   })
@@ -28,19 +28,19 @@ test('Test Token Error', async () => {
   return expect(res.code).toBe(ECODE.AUTH)
 })
 
-test('Test Wxfwh grab', async () => {
-  const res = await wxfwh.grabCoupon(cookie, wxfwhActConfs[0].gid, guard)
+// test('Wxfwh grab', async () => {
+//   const res = await wxfwh.grabCoupon(cookie, wxfwhActConfs[0].gid, guard)
 
-  return expect(res).toBeTruthy()
-})
+//   return expect(res).toBeTruthy()
+// })
 
-test('Test wxfwh Result', async () => {
-  const res = await wxfwh.getCouponList(cookie, 'I5r2SYd5kTN1l1AkMhwCNA')
+// test('Wxfwh Result', async () => {
+//   const res = await wxfwh.getCouponList(cookie, 'I5r2SYd5kTN1l1AkMhwCNA')
 
-  return expect(res.length).toBeGreaterThan(0)
-})
+//   return expect(res.length).toBeGreaterThan(0)
+// })
 
-// test('Test lottery Result', async () => {
+// test('Lottery Result', async () => {
 //   const tmplData = await lottery.getTemplateData(cookie, '1VlhFT', guard)
 //   const ticketConfig = await lottery.getTicketConfig(
 //     tmplData.gdId,

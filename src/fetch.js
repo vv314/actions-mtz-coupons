@@ -4,6 +4,8 @@ import timeoutSignal from 'timeout-signal'
 import HttpsProxyAgent from 'https-proxy-agent'
 
 const cookieJarMap = new Map()
+const UA =
+  'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1'
 
 const ECODE = {
   FETCH: 'FETCH_ERROR',
@@ -13,13 +15,11 @@ const ECODE = {
 
 async function fetch(url, opts = {}) {
   const cookieJar = opts.cookie
-  const guard = opts.guard
   const existCookie = cookieJar?.getCookieStringSync?.(url)
   const optCookie = opts.headers?.cookie || ''
   const defHeader = {
     // 重要：需设置 UA
-    'User-Agent':
-      'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1',
+    'User-Agent': UA,
     Connection: 'keep-alive'
   }
   let urlObj = new URL(url)
@@ -39,7 +39,7 @@ async function fetch(url, opts = {}) {
     opts.agent = new HttpsProxyAgent(opts.proxy)
   }
 
-  opts.headers = Object.assign({}, defHeader, opts.headers)
+  opts.headers = { ...defHeader, ...opts.headers }
 
   if (opts.params) {
     Object.keys(opts.params).forEach((key) => {
@@ -51,12 +51,18 @@ async function fetch(url, opts = {}) {
   delete opts.timeout
   delete opts.params
 
-  if (guard) {
-    urlObj = await guard.sign({
-      url: urlObj,
-      method: opts.method,
-      body: opts.body
-    })
+  if (opts.guard) {
+    const { url, headers } = await opts.guard.sign(
+      {
+        url: urlObj,
+        method: opts.method,
+        body: opts.body
+      },
+      opts.signType
+    )
+
+    urlObj = url
+    opts.headers = { ...opts.headers, ...headers }
   }
 
   try {
@@ -82,11 +88,8 @@ async function fetch(url, opts = {}) {
 
 async function doGet(url, opts = {}) {
   const res = await fetch(url, {
-    headers: opts.headers,
-    cookie: opts.cookie,
-    params: opts.params,
-    timeout: opts.timeout ?? 10000,
-    guard: opts.guard
+    ...opts,
+    timeout: opts.timeout ?? 10000
   })
 
   if (res.ok) return res.json()
@@ -109,15 +112,13 @@ async function doPost(url, data, opts = {}) {
   }
 
   const res = await fetch(url, {
+    ...opts,
     method: 'POST',
     body: body,
-    cookie: opts.cookie,
-    params: opts.params,
     headers: Object.assign({}, opts.headers, {
       'Content-Type': cType
     }),
-    timeout: opts.timeout ?? 10000,
-    guard: opts.guard
+    timeout: opts.timeout ?? 10000
   })
 
   if (res.ok) return res.json()

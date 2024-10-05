@@ -93,7 +93,7 @@ function matchMoudleData(text, start, end) {
 
   if (!res) return null
 
-  const data = eval(`({moduleId:"${res[0]}})`)
+  const data = eval(`({moduleId:"${res[0]})`)
 
   return data
 }

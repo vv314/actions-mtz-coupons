@@ -50,6 +50,7 @@ class ShadowGuard {
   async getReqSig(reqOpt) {
     const guardURL = new URL(formatUrl(reqOpt.url || ''))
 
+    guardURL.searchParams.append('gdBs', '')
     guardURL.searchParams.append('yodaReady', yodaReady)
     guardURL.searchParams.append('csecplatform', csecPlatform)
     guardURL.searchParams.append('csecversion', this.version)
@@ -60,27 +61,33 @@ class ShadowGuard {
     return { guardURL, reqSig }
   }
 
-  async getMtgSig(reqSig, isShort) {
+  async getMtgSig(reqSig, signType = 'url') {
     return getMtgSig(reqSig, {
       ...this.context,
-      isShort
+      signType
     })
   }
 
   /**
    * @param {FetchOptions} reqOpt
-   * @param {boolean} isShort
+   * @param {'url' | 'header'} signType
    * @returns
    */
-  async sign(reqOpt, isShort) {
+  async sign(reqOpt, signType) {
     if (!reqOpt) return reqOpt
 
     const { guardURL, reqSig } = await this.getReqSig(reqOpt)
-    const mtgSig = await this.getMtgSig(reqSig, isShort)
+    const res = await this.getMtgSig(reqSig, signType)
+    const mtgSig = JSON.stringify(res.data)
+    const headers = {}
 
-    guardURL.searchParams.append('mtgsig', JSON.stringify(mtgSig.data))
+    if (signType === 'header') {
+      headers.mtgsig = mtgSig
+    } else {
+      guardURL.searchParams.append('mtgsig', mtgSig)
+    }
 
-    return guardURL.toString()
+    return { url: guardURL.toString(), headers }
   }
 }
 

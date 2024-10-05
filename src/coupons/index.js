@@ -17,11 +17,11 @@ async function runTask(cookie, guard) {
     const asyncResults = await Promise.all([
       ...gundamActConfs.map((conf) =>
         gundam.grabCoupon(cookie, conf.gid, guard).catch(() => [])
-      ),
-      // 微信服务号活动
-      ...wxfwhActConfs.map((conf) =>
-        wxfwh.grabCoupon(cookie, conf.gid, guard).catch(() => [])
       )
+      // 微信服务号活动
+      // ...wxfwhActConfs.map((conf) =>
+      //   wxfwh.grabCoupon(cookie, conf.gid, guard).catch(() => [])
+      // )
     ])
 
     results.push(...asyncResults.flat())
