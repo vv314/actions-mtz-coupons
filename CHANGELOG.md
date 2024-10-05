@@ -1,3 +1,14 @@
+## 2.2.0 (2024-10-06)
+
+#### :rocket: New Feature
+
+- 适配最新 Guard
+
+#### :house: Internal
+
+- 升级 Eslint 9
+- 升级 Github Actions 依赖
+
 ## 2.1.0 (2024-01-01)
 
 HAPPY NEW YEAR! 🎉
