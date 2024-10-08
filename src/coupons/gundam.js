@@ -1,5 +1,5 @@
 import fetch from '../fetch.js'
-import { dateFormat } from '../util/index.js'
+import { dateFormat, removePhoneRestriction } from '../util/index.js'
 import { getTemplateData, matchMoudleData } from '../template.js'
 import { ECODE } from './const.js'
 
@@ -72,7 +72,7 @@ function formatCoupons(coupons, actName) {
       etime,
       amount: item.couponAmount,
       amountLimit,
-      useCondition: item.useCondition,
+      useCondition: removePhoneRestriction(item.useCondition),
       actName: actName
     }
   })

@@ -7,7 +7,7 @@ import Notifier from './src/notifier/index.js'
 import { parseToken } from './src/user.js'
 import updateNotifier from './src/update-notifier.js'
 import { grabCoupons } from './src/coupons/index.js'
-import { readPkgJson } from './src/util/index.js'
+import { maskNickName, readPkgJson } from './src/util/index.js'
 
 const { version: currentVersion } = readPkgJson()
 
@@ -167,7 +167,7 @@ async function doJob(account, progress) {
   const { coupons, userInfo } = res.data
 
   console.log(...coupons)
-  console.log(`\n红包已放入账号：${userInfo.nickName}`)
+  console.log(`\n红包已放入账号：${maskNickName(userInfo.nickName)}`)
   console.log(`\n🎉 领取成功！`)
 
   const message = stringifyCoupons(coupons)

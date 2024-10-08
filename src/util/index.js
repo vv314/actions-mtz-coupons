@@ -31,4 +31,19 @@ function dateFormat(date) {
   })
 }
 
-export { dateFormat, groupBy, readPkgJson, replacePhoneNumber }
+function maskNickName(nickName) {
+  return nickName.replace(/^(.).*(.)$/, '$1***$2')
+}
+
+function removePhoneRestriction(text) {
+  return text.replace(/限登录手机号为\d{3}\*\*\*\*\d{4}使用。/, '')
+}
+
+export {
+  dateFormat,
+  groupBy,
+  readPkgJson,
+  replacePhoneNumber,
+  maskNickName,
+  removePhoneRestriction
+}
