@@ -2,7 +2,8 @@ import fetch from '../fetch.js'
 import {
   formatUrl,
   genMetaData,
-  getFingerprint,
+  getH5Fp,
+  getH5Dfp,
   getMtgSig,
   getReqSig
 } from './guard.js'
@@ -10,6 +11,7 @@ import { guardVersion, csecPlatform, yodaReady } from './const.js'
 
 class ShadowGuard {
   version = guardVersion
+  h5fp = ''
   fingerprint = ''
   meta = {}
 
@@ -24,7 +26,8 @@ class ShadowGuard {
     actUrl = actUrl instanceof URL ? actUrl.toString() : actUrl
 
     this.meta = await genMetaData(actUrl, this.version)
-    this.fingerprint = await getFingerprint(this.meta, this.version)
+    this.fingerprint = await getH5Dfp(this.meta, this.version)
+    this.h5fp = await getH5Fp(actUrl)
 
     if (!this.context.dfpId) {
       this.context.dfpId = await this.getWebDfpId(this.fingerprint)

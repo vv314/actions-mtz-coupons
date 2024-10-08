@@ -44,7 +44,7 @@ function formatUrl(url) {
     }
 
     return url
-  } catch (jt) {
+  } catch {
     return url
   }
 }
@@ -58,10 +58,19 @@ async function genMetaData(actUrl, version) {
   return data
 }
 
-async function getFingerprint(metaData, version) {
+async function getH5Dfp(metaData, version) {
   const { data } = await wbus({
-    method: 'getFingerprint',
+    method: 'getH5Dfp',
     args: [metaData, version]
+  })
+
+  return data
+}
+
+async function getH5Fp(url) {
+  const { data } = await wbus({
+    method: 'getH5Fp',
+    args: [url]
   })
 
   return data
@@ -89,4 +98,4 @@ async function getMtgSig(reqSig, guardCtx) {
   }
 }
 
-export { formatUrl, getFingerprint, genMetaData, getMtgSig, getReqSig }
+export { formatUrl, getH5Fp, getH5Dfp, genMetaData, getMtgSig, getReqSig }

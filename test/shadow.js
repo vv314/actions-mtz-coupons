@@ -41,3 +41,7 @@ test('Base Signature', async () => {
 
   expect(sig).toBeTruthy()
 })
+
+test('H5 Fingerprint', () => {
+  return expect(guard.h5fp.length).toBeTruthy()
+})

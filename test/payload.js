@@ -13,7 +13,7 @@ beforeAll(() => guard.init(gundam.getActUrl(mainActConf.gid)))
 
 test('Main Payload', async () => {
   const tmplData = await getTemplateData(cookie, mainActConf.gid, guard)
-  const payload = await gundam.getPayload(tmplData)
+  const payload = await gundam.getPayload(tmplData, guard)
 
   return expect(payload).toMatchObject({
     actualLatitude: 0,
