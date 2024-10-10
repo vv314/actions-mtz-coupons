@@ -17,11 +17,17 @@
 
 <p>外卖神券天天领，超值红包享不停；以自动化的方式领取外卖红包。</p><br/>
 
-> [!TIP]
-> ★ 专注领劵，不搞杂七杂八<br/>★ 多帐号支持，全村都能配上<br/>★ 并行化任务，数管齐下更有效率<br/>★ 异常重试，一次不行再来一次<br/>★ 多路消息通知，总有一个到达你<br/>★ Github Actions 部署，操作如此简单
-> <br/>
+> [!NOTE]
+> ★ 专注领劵，不搞杂七杂八<br/>
+> ★ 多帐号支持，全村都能配上<br/>
+> ★ 并行化任务，数管齐下更有效率<br/>
+> ★ 异常重试，一次不行再来一次<br/>
+> ★ 多路消息通知，总有一个到达你<br/>
+> ★ Github Actions 部署，操作如此简单
 
-## 📕 使用
+<br/>
+
+## 👨‍🍳 指南
 
 ### 环境要求
 
@@ -30,7 +36,7 @@
 
 ### 获取账号 Token
 
-- [使用 Chrome DevTools 获取账号 Token](./docs/获取token.md)
+[使用 Chrome DevTools 获取账号 Token](./docs/获取token.md)
 
 **示例：**
 
@@ -38,13 +44,18 @@
 Js3xxxxFyy_Aq-rOnxMte6vKPV4AAAAA6QwAADgqRBSfcmNqyuG8CQ7JDL7xxxxNGbfF7tPNV5347_ANLcydua_JHCSRj0_xx
 ```
 
+> [!IMPORTANT]
+> 账号 Token 仅限官方接口身份认证，本项目（[vv314/actions-mtz-coupons](https://github.com/vv314/actions-mtz-coupons) ）**不会存储和发送给第三方**。
+
 ### [GitHub Actions](https://docs.github.com/cn/actions) 部署
 
 #### 1. Fork 源项目
 
-1.  访问 [actions-mtz-coupons](https://github.com/vv314/actions-mtz-coupons) 源仓库
-2.  点击右上角 `Star` 按钮 ;)
-3.  点击右上角 `Fork` 按钮
+1.  访问 [vv314/actions-mtz-coupons](https://github.com/vv314/actions-mtz-coupons) 源仓库
+2.  点击右上角 `Fork` 按钮
+3.  <del>点击右上角 `Star` 按钮</del>
+
+    如果本项目对你有帮助，就让 ⭐️ 闪耀吧 ；）
 
 > [!TIP]
 > Fork 后的项目可执行 `npm run sync` 同步上游更新，详情参考 [一键同步](./docs/更新.md)。
@@ -86,7 +97,7 @@ Github Actions 工作流支持**手动**与**自动**两种触发方式。
 - [脚本更新](./docs/更新.md)
 - [本地运行](./docs/本地运行.md)
 
-## 🏗 参与贡献
+## 🍕 参与贡献
 
 请参阅：[CONTRIBUTING.md](https://github.com/vv314/actions-mtz-coupons/blob/main/CONTRIBUTING.md)
 
