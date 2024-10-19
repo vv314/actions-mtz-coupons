@@ -1,4 +1,4 @@
-import fetch from '../fetch.js'
+import request from '../request.js'
 import { dateFormat, groupBy } from '../util/index.js'
 import { getTemplateData, matchMoudleData } from '../template.js'
 import { ECODE } from './const.js'
@@ -30,7 +30,7 @@ function formatCoupons(coupons, actName) {
 }
 
 async function getCouponList(cookie, viewId) {
-  const res = await fetch.get(
+  const res = await request.get(
     'https://promotion.waimai.meituan.com/playcenter/generalcoupon/info',
     {
       params: {
@@ -66,7 +66,7 @@ async function getPayload(
   { gundamId, gdId, pageId, renderList, appJs },
   guard
 ) {
-  const jsText = await fetch(appJs).then((res) => res.text())
+  const jsText = await request(appJs).then((res) => res.text())
   let data = null
 
   try {
@@ -119,7 +119,7 @@ async function grabCoupon(cookie, gundamId, guard) {
     return []
   }
 
-  const res = await fetch.post(
+  const res = await request.post(
     'https://promotion.waimai.meituan.com/playcenter/generalcoupon/fetch',
     payload,
     {

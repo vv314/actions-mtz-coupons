@@ -1,10 +1,10 @@
-import fetch from 'node-fetch'
+import timeoutSignal from 'timeout-signal'
 
 function doGet(url, data) {
   const params = new URLSearchParams(data)
 
   return fetch(`${url}?${params.toString()}`, {
-    timeout: 10000
+    signal: timeoutSignal(10000)
   }).then((res) => res.json())
 }
 
@@ -27,7 +27,7 @@ function doPost(url, data, type = 'json') {
     headers: {
       'Content-Type': cType
     },
-    timeout: 10000
+    signal: timeoutSignal(10000)
   }).then((res) => res.json())
 }
 

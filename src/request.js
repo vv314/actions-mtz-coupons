@@ -1,4 +1,3 @@
-import nodeFetch from 'node-fetch'
 import tough from 'tough-cookie'
 import timeoutSignal from 'timeout-signal'
 import HttpsProxyAgent from 'https-proxy-agent'
@@ -13,7 +12,7 @@ const ECODE = {
   TIMEOUT: 'TIMEOUT'
 }
 
-async function fetch(url, opts = {}) {
+async function request(url, opts = {}) {
   const cookieJar = opts.cookie
   const existCookie = cookieJar?.getCookieStringSync?.(url)
   const optCookie = opts.headers?.cookie || ''
@@ -66,7 +65,7 @@ async function fetch(url, opts = {}) {
   }
 
   try {
-    res = await nodeFetch(urlObj, opts)
+    res = await fetch(urlObj, opts)
   } catch (e) {
     if (opts.signal?.aborted) {
       throw { code: ECODE.TIMEOUT, req: urlObj, msg: e }
@@ -75,7 +74,7 @@ async function fetch(url, opts = {}) {
     throw { code: ECODE.FETCH, req: urlObj, msg: res.statusText }
   }
 
-  const setCookies = res.headers.raw()['set-cookie']
+  const setCookies = res.headers['set-cookie']
 
   if (setCookies) {
     setCookies.map((cookie) =>
@@ -87,7 +86,7 @@ async function fetch(url, opts = {}) {
 }
 
 async function doGet(url, opts = {}) {
-  const res = await fetch(url, {
+  const res = await request(url, {
     ...opts,
     timeout: opts.timeout ?? 10000
   })
@@ -111,7 +110,7 @@ async function doPost(url, data, opts = {}) {
     body = data ? JSON.stringify(data) : ''
   }
 
-  const res = await fetch(url, {
+  const res = await request(url, {
     ...opts,
     method: 'POST',
     body: body,
@@ -126,11 +125,11 @@ async function doPost(url, data, opts = {}) {
   throw { code: ECODE.FETCH, url: url, msg: res.statusText }
 }
 
-fetch.ECODE = ECODE
-fetch.get = doGet
-fetch.post = doPost
-fetch.setProxyAgent = (url) => {
-  fetch._proxyAgent = new HttpsProxyAgent(url)
+request.ECODE = ECODE
+request.get = doGet
+request.post = doPost
+request.setProxyAgent = (url) => {
+  request._proxyAgent = new HttpsProxyAgent(url)
 }
 
 export function createCookieJar(id) {
@@ -141,4 +140,4 @@ export function createCookieJar(id) {
   return cookieJar
 }
 
-export default fetch
+export default request

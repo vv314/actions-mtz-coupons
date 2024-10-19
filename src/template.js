@@ -1,4 +1,4 @@
-import fetch from './fetch.js'
+import request from './request.js'
 
 function extractAppJsUrl(text) {
   const regex = /https:\/\/[^"]*\/app[^"]*\.js/
@@ -8,7 +8,7 @@ function extractAppJsUrl(text) {
 }
 
 async function getTemplateData(cookie, gundamId, guard) {
-  const text = await fetch(
+  const text = await request(
     `https://market.waimai.meituan.com/api/template/get?env=current&el_biz=waimai&el_page=gundam.loader&gundam_id=${gundamId}`
   ).then((rep) => rep.text())
   const matchGlobal = text.match(/globalData: ({.+})/)
@@ -60,7 +60,7 @@ async function getRenderList(
   }
 
   try {
-    const res = await fetch.get(
+    const res = await request.get(
       'https://market.waimai.meituan.com/gd/zc/renderinfo',
       {
         params: {

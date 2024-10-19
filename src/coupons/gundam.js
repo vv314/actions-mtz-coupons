@@ -1,4 +1,4 @@
-import fetch from '../fetch.js'
+import request from '../request.js'
 import { dateFormat, removePhoneRestriction } from '../util/index.js'
 import { getTemplateData, matchMoudleData } from '../template.js'
 import { ECODE } from './const.js'
@@ -26,7 +26,7 @@ function resolveRedMod(text, renderList) {
 }
 
 async function getPayload({ gundamId, gdId, appJs, renderList }, guard) {
-  const jsText = await fetch(appJs).then((res) => res.text())
+  const jsText = await request(appJs).then((res) => res.text())
   const data = resolveRedMod(jsText, renderList)
 
   if (!data) {
@@ -82,7 +82,7 @@ async function grabCoupon(cookie, gundamId, guard) {
   const actUrl = getActUrl(gundamId)
   const tmplData = await getTemplateData(cookie, gundamId, guard)
   const payload = await getPayload(tmplData, guard)
-  const res = await fetch.post(
+  const res = await request.post(
     'https://mediacps.meituan.com/gundam/gundamGrabV4',
     payload,
     {

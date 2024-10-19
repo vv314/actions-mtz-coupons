@@ -1,4 +1,4 @@
-import fetch, { createCookieJar } from './fetch.js'
+import request, { createCookieJar } from './request.js'
 import { ECODE } from './coupons/const.js'
 
 function tokenFormat(token, index = 0) {
@@ -37,7 +37,7 @@ function parseToken(token) {
 }
 
 async function getMTUerId() {
-  const rep = await fetch('https://h5.waimai.meituan.com/waimai/mindex/home')
+  const rep = await request('https://h5.waimai.meituan.com/waimai/mindex/home')
 
   const repCookie = rep.headers.get('set-cookie') || ''
   const matchArr = repCookie.match(/userId=(\w+)/) || []
@@ -46,7 +46,7 @@ async function getMTUerId() {
 }
 
 async function getUserInfo(cookie, guard) {
-  const res = await fetch.post(
+  const res = await request.post(
     'https://mediacps.meituan.com/gundam/gundamLogin',
     null,
     {

@@ -1,11 +1,11 @@
 import semver from 'semver'
 import { readPkgJson } from './util/index.js'
-import fetch from './fetch.js'
+import request from './request.js'
 
 const { version: currentVersion } = readPkgJson()
 
 async function getLatestRelease(timeout = 5000) {
-  const res = await fetch.get(
+  const res = await request.get(
     'https://api.github.com/repos/vv314/actions-mtz-coupons/releases',
     {
       timeout: timeout
@@ -43,7 +43,7 @@ async function checkUpdate(timeout) {
   } catch (e) {
     let errMsg = e.msg ?? e.message
 
-    if (e.code === fetch.ECODE.TIMEOUT) {
+    if (e.code === request.ECODE.TIMEOUT) {
       errMsg = '请求超时'
     }
 

@@ -1,4 +1,4 @@
-import fetch from '../fetch.js'
+import request from '../request.js'
 import {
   formatUrl,
   genMetaData,
@@ -40,7 +40,7 @@ class ShadowGuard {
   }
 
   async getWebDfpId(fingerprint) {
-    const res = await fetch.post(
+    const res = await request.post(
       'https://appsec-mobile.meituan.com/v1/webdfpid',
       {
         data: fingerprint

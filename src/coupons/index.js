@@ -1,4 +1,4 @@
-import fetch from '../fetch.js'
+import request from '../request.js'
 import ShadowGuard from '../shadow/index.js'
 import { createMTCookie, getUserInfo } from '../user.js'
 import { mainActConf, gundamActConfs, wxfwhActConfs, ECODE } from './const.js'
@@ -44,12 +44,12 @@ async function runTask(cookie, guard) {
         code = ECODE.AUTH
         msg = '登录过期'
         break
-      case fetch.ECODE.FETCH:
+      case request.ECODE.FETCH:
         code = ECODE.API
         msg = '接口异常'
         break
-      case fetch.ECODE.TIMEOUT:
-      case fetch.ECODE.NETWOEK:
+      case request.ECODE.TIMEOUT:
+      case request.ECODE.NETWOEK:
         code = ECODE.NETWOEK
         msg = '网络异常'
         break
@@ -79,7 +79,7 @@ async function grabCoupons(token, { maxRetry = 0, proxy }) {
 
   // 优先设置代理
   if (proxy) {
-    fetch.setProxyAgent(proxy)
+    request.setProxyAgent(proxy)
   }
 
   const cookieJar = createMTCookie(token)
@@ -89,7 +89,7 @@ async function grabCoupons(token, { maxRetry = 0, proxy }) {
 
   async function main(retryTimes = 0) {
     const result = await runTask(cookieJar, guard)
-    const needRetry = [fetch.ECODE.NETWOEK, fetch.ECODE.API].includes(
+    const needRetry = [request.ECODE.NETWOEK, request.ECODE.API].includes(
       result.code
     )
 

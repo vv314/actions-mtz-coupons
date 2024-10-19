@@ -1,6 +1,5 @@
-import fetch from '../fetch.js'
+import request from '../request.js'
 import { getTemplateData } from '../template.js'
-import { ECODE } from './const.js'
 
 const fetchStatus = {
   CAN_FETCH: 0,
@@ -41,7 +40,7 @@ function resolveMetadata(renderList, jsText) {
 }
 
 async function getTicketConfig(appJs, renderList) {
-  const jsText = await fetch(appJs).then((res) => res.text())
+  const jsText = await request(appJs).then((res) => res.text())
   const data = resolveMetadata(renderList, jsText)
   const ticketConfig = data.ticketConfig.makeOptions1.ticketInfo1
 
@@ -87,7 +86,7 @@ function formatCoupons(coupons, info) {
 }
 
 async function getCouponList(cookie, couponIds) {
-  const res = await fetch.get(
+  const res = await request.get(
     `https://promotion.waimai.meituan.com/lottery/couponcomponent/info/v2`,
     {
       cookie,
@@ -131,7 +130,7 @@ async function grabCoupon(cookie, gundamId, guard) {
           },
           guard
         )
-        const res = await fetch.post(
+        const res = await request.post(
           `https://promotion.waimai.meituan.com/lottery/couponcomponent/fetchcomponentcoupon/v2`,
           payload.body,
           {
