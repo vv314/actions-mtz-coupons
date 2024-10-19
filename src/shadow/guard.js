@@ -1,6 +1,6 @@
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import fs from 'fs-extra'
+import fs from 'fs/promises'
 import { init, WASI } from '@wasmer/wasi'
 
 await init()

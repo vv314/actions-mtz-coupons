@@ -1,3 +1,4 @@
+import { beforeAll, expect, test } from 'vitest'
 import { getTemplateData, getRenderList } from '../src/template.js'
 import ShadowGuard from '../src/shadow/index.js'
 import gundam from '../src/coupons/gundam.js'

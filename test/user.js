@@ -1,3 +1,4 @@
+import { beforeAll, expect, test } from 'vitest'
 import tough from 'tough-cookie'
 import ShadowGuard from '../src/shadow/index.js'
 import mainGrab from '../src/coupons/gundam.js'

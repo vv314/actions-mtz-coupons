@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest'
 import updateNotifier from '../src/update-notifier.js'
 
 test('Update', () => {

@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest'
 import Notifier from '../src/notifier/index.js'
 
 const notifier = new Notifier({

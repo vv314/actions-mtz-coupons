@@ -1,3 +1,5 @@
+import { beforeAll, expect, test } from 'vitest'
+
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 
 import ShadowGuard from '../src/shadow/index.js'

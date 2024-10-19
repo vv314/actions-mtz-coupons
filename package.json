@@ -11,28 +11,26 @@
   "author": "Vincent <vv314@foxmail.com>",
   "scripts": {
     "bootstrap": "corepack enable && corepack pnpm i",
-    "start": "node index",
-    "start:local": "node index.local",
+    "start": "node index.js",
+    "start:local": "node -r dotenv/config index.js",
     "lint": "eslint .",
-    "test": "NODE_OPTIONS=--experimental-vm-modules npx jest",
-    "sync": "node ./sync-upstream"
+    "test": "vitest run",
+    "sync": "node ./sync-upstream.js"
   },
   "dependencies": {
     "@wasmer/wasi": "^1.2.2",
-    "https-proxy-agent": "^7.0.2",
+    "https-proxy-agent": "^7.0.5",
     "node-fetch": "^3.3.2",
-    "p-limit": "^5.0.0",
-    "semver": "^7.5.4",
+    "p-limit": "^6.1.0",
+    "semver": "^7.6.3",
     "timeout-signal": "^2.0.0",
-    "tough-cookie": "^4.1.3"
+    "tough-cookie": "^5.0.0"
   },
   "devDependencies": {
-    "dotenv": "^16.3.1",
-    "eslint": "^9.12.0",
-    "eslint-plugin-jest": "^28.8.3",
-    "fs-extra": "^11.2.0",
+    "dotenv": "^16.4.5",
+    "eslint": "^9.13.0",
     "globals": "^15.10.0",
-    "jest": "^29.7.0"
+    "vitest": "^2.1.3"
   },
   "private": true,
   "repository": {
@@ -44,5 +42,5 @@
   },
   "homepage": "https://github.com/vv314/actions-mtwm-coupons#readme",
   "license": "MIT",
-  "packageManager": "pnpm@8.12.1+sha256.28ca61ece5a496148b73fabc9afb820f9c3fec4f55f04ce45a2cea0a5219f2e1"
+  "packageManager": "pnpm@8.15.9+sha512.499434c9d8fdd1a2794ebf4552b3b25c0a633abcee5bb15e7b5de90f32f47b513aca98cd5cfd001c31f0db454bc3804edccd578501e4ca293a6816166bbd9f81"
 }
